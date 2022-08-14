@@ -6,6 +6,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import router from './router'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import VueCompositionAPI from '@vue/composition-api'
+import './registerServiceWorker'
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
