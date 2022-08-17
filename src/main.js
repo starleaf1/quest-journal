@@ -8,11 +8,13 @@ import { createPinia, PiniaVuePlugin } from "pinia";
 import { Plugin } from "vue-fragment";
 import VueCompositionAPI from "@vue/composition-api";
 import "./registerServiceWorker";
+import FirebaseVuePlugin from "@/plugins/firebase";
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 Vue.use(VueCompositionAPI);
 Vue.use(Plugin);
+Vue.use(FirebaseVuePlugin);
 
 Vue.config.productionTip = false;
 
