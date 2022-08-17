@@ -1,9 +1,13 @@
 <template>
   <fragment>
-    <v-navigation-drawer app></v-navigation-drawer>
-    <v-main>
-      <router-view />
-    </v-main>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <h1 class="text-h5">Quest Journal</h1>
+    </v-app-bar>
+    <router-view />
   </fragment>
 </template>
 
