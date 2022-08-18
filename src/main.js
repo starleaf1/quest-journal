@@ -9,9 +9,11 @@ import { Plugin } from "vue-fragment";
 import VueCompositionAPI from "@vue/composition-api";
 import "./registerServiceWorker";
 import FirebaseVuePlugin from "@/plugins/firebase";
+import piniaPluginPersistedState from "pinia-plugin-persistedstate";
 
 Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
+const pinia = createPinia(piniaPluginPersistedState);
+pinia.use();
 Vue.use(VueCompositionAPI);
 Vue.use(Plugin);
 Vue.use(FirebaseVuePlugin);

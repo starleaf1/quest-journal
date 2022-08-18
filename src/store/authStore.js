@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 
-export const authStore = defineStore("counter", {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
+    isFetchingAuth: true,
     isAuthenticated: false,
     user: null,
   }),
@@ -12,6 +13,15 @@ export const authStore = defineStore("counter", {
     storeAuthData(userData) {
       this.isAuthenticated = true;
       this.user = userData;
+      this.isFetchingAuth = false;
     },
+    clearAuthData() {
+      this.isAuthenticated = false;
+      this.user = null;
+      this.isFetchingAuth = false;
+    },
+  },
+  persist: {
+    storage: sessionStorage,
   },
 });
