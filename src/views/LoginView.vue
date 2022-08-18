@@ -9,30 +9,24 @@
           <v-btn block color="primary">Login</v-btn>
         </v-form>
       </div>
-      <div>
-        <v-btn dark block color="blue">
-          <v-icon left>mdi-google</v-icon>
-          <span>Continue with Google</span>
-        </v-btn>
+      <div class="mt-4">
+        <LoginWithGoogle block />
       </div>
     </v-sheet>
   </div>
 </template>
 
 <script>
+import LoginWithGoogle from '@/components/auth/LoginWithGoogle.vue';
 export default {
-  name: 'LoginView',
-  data () {
+  name: "LoginView",
+  data() {
     return ({
-      email: '',
-      password: ''
-    })
+      email: "",
+      password: ""
+    });
   },
-  methods: {
-    login () {
-      return
-    }
-  }
+  components: { LoginWithGoogle }
 }
 </script>
 

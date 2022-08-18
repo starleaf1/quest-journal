@@ -31,7 +31,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log("New route requested.", auth.isAuthenticated);
+
   const auth = useAuthStore();
+  auth.originalDestination = to.path;
   const routeRequiresAuth = to.matched.some(
     (record) => record.meta?.authRequired
   );

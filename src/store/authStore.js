@@ -5,6 +5,7 @@ export const useAuthStore = defineStore("auth", {
     isFetchingAuth: true,
     isAuthenticated: false,
     user: null,
+    originalDestination: null,
   }),
   getters: {
     uid: (state) => state.user?.uid,
