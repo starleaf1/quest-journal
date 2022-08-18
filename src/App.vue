@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <router-view />
+    <v-overlay v-model="waitingForAuth">
+      <v-progress-circular indeterminate color="primary" />
+    </v-overlay>
+    <router-view v-if="!waitingForAuth" />
   </v-app>
 </template>
 
@@ -12,6 +15,10 @@ export default {
   computed: {
     darkMode () {
       return null
+    },
+    waitingForAuth () {
+      const authStore = useAuthStore()
+      return authStore.isFetchingAuth
     }
   },
   mounted () {
