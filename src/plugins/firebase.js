@@ -28,6 +28,6 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 
 export default {
   install(Vue) {
-    Vue.$firebase = { app, db, functions, auth, storage };
+    Vue.prototype.$firebase = { app, db, functions, auth, storage };
   },
 };
