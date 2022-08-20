@@ -22,9 +22,15 @@ export default {
     }
   },
 
+  computed: {
+    googleApiKey () {
+      return process.env.VUE_APP_GOOGLE_API_KEY
+    }
+  },
+
   async mounted () {
     const loader = new Loader({
-      apiKey: process.env.VUE_APP_GOOGLE_API_KEY
+      apiKey: this.googleApiKey
     })
 
     try {

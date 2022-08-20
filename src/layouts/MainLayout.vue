@@ -5,6 +5,7 @@
       color="primary"
       dark
     >
+      <v-app-bar-nav-icon @click="handleNavButtonClick"></v-app-bar-nav-icon>
       <h1 class="text-h5">Quest Journal</h1>
       <v-spacer />
       <ProfileMenu />
@@ -15,10 +16,17 @@
 
 <script>
 import ProfileMenu from "@/components/auth/ProfileMenu.vue";
+import { useMiscStore } from '@/store';
 export default {
   name: 'MainLayout',
   components: {
     ProfileMenu
+  },
+  methods: {
+    handleNavButtonClick () {
+      const miscStore = useMiscStore()
+      miscStore.toggleDrawer()
+    }
   }
 }
 </script>

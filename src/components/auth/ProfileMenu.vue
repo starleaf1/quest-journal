@@ -30,6 +30,7 @@ export default {
     initials () {
       const authStore = useAuthStore()
       let names = authStore.user?.displayName.split(' ')
+      if (!names) return
       names.splice(1, names.length - 2)
       return `${names[0].substr(0, 1)}${names[1].substr(0, 1)}`
     }

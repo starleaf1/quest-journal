@@ -11,3 +11,12 @@ export const useCounterStore = defineStore("counter", {
     },
   },
 });
+
+export const useMiscStore = defineStore("misc", {
+  state: () => ({ drawerOpen: false }),
+  actions: {
+    toggleDrawer() {
+      this.drawerOpen = !this.drawerOpen;
+    },
+  },
+});
