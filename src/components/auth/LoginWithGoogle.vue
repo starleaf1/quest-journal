@@ -21,8 +21,12 @@ export default {
     try {
       const redirectResult = await getRedirectResult(this.$firebase.auth)
       if (redirectResult?.user) {
-        window.location.href = authStore.originalDestination ?? '/'
+        authStore.storeAuthData(redirectResult.user)
+        const originalDestination = authStore.originalDestination ?? '/'
         authStore.originalDestination = null
+        console.log('[google-login] Login complete.', authStore.isAuthenticated)
+        console.log('[google-login] Redirecting to', originalDestination)
+        window.location.href = originalDestination ?? '/'
       }
     } catch (e) {
       console.error(e)
