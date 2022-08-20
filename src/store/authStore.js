@@ -12,6 +12,14 @@ export const useAuthStore = defineStore("auth", {
   },
   actions: {
     storeAuthData(userData) {
+      sessionStorage.setItem(
+        "auth",
+        JSON.stringify({
+          isAuthenticated: true,
+          user: userData,
+          isFetchingAuth: false,
+        })
+      );
       this.isAuthenticated = true;
       this.user = userData;
       this.isFetchingAuth = false;
