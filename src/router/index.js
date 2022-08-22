@@ -45,10 +45,7 @@ router.beforeEach((to, from, next) => {
     return next("/login");
   } else {
     if (routeRequiresAuth)
-      console.log(
-        "[router] Access granted for protected route.",
-        auth.user?.uid
-      );
+      console.log("[router] Access granted for protected route.");
     return next();
   }
 });
