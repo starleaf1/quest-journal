@@ -4,6 +4,7 @@
       v-for="place in places"
       :key="place.place_id"
       :place="place"
+      @click="handleClick"
     />
   </fragment>
 </template>
@@ -16,6 +17,11 @@ export default {
     places: {
       type: Array,
       default: () => []
+    }
+  },
+  methods: {
+    handleClick(place) {
+      this.$emit('click:marker', place)
     }
   },
   components: { FormattedMarker }

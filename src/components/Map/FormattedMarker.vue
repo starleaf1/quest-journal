@@ -2,6 +2,7 @@
   <l-marker
     :latLng="latLng"
     :icon="icon"
+    @click="handleMarkerClick"
   />
 </template>
 
@@ -26,6 +27,11 @@ export default {
         iconUrl: this.place.icon,
         iconSize: [16, 16]
       })
+    }
+  },
+  methods: {
+    handleMarkerClick() {
+      this.$emit('click', this.place)
     }
   }
 }
