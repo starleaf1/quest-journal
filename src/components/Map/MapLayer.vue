@@ -7,10 +7,11 @@
     :center="center"
   >
     <l-tile-layer :url="tileUrl" />
-    <BaseMarkers
+    <!-- <BaseMarkers
       :places="places"
       @click:marker="showInfoWindow"
-    />
+    /> -->
+    <MarkerGroup :bounds="bounds" />
     <InfoWindow
       :place="inspectedPlace"
       :open="infoWindowOpen"
@@ -20,13 +21,11 @@
 </template>
 
 <script>
-import { getPlacesInBounds } from "@/api/placesQueries"
-import BaseMarkers from "./BaseMarkers.vue"
-import _ from "lodash"
 import { useSavedPlacesStore } from '@/store/savedPlaces'
 import { collection, onSnapshot } from '@firebase/firestore'
 import { useAuthStore } from "@/store/authStore"
 import InfoWindow from "./InfoWindow.vue"
+import MarkerGroup from "./MarkerGroup.vue"
 
 export default {
   name: "MapLayer",
@@ -44,10 +43,14 @@ export default {
       center: [-8.4537137, 114.5110415],
       places: [],
       inspectedPlace: null,
-      infoWindowOpen: false
+      infoWindowOpen: false,
+      bounds: null
     });
   },
   methods: {
+    handleBoundsChange (e) {
+      this.$data.bounds(e)
+    },
     unsubscribe() {
       const authStore = useAuthStore()
       const savedPlacesStore = useSavedPlacesStore()
@@ -68,40 +71,12 @@ export default {
     hideInfoWindow() {
       this.$data.infoWindowOpen = false
     },
-    handleBoundsChange(e) {
-      const appendPlaces = (newPlaces) => {
-        if (!this.$data.places.length) {
-          this.$data.places = newPlaces
-          return
-        }
-
-        const placeFilter = newPlace => {
-          const isUnique = existing.some(existingPlace => existingPlace.place_id !== newPlace.place_id)
-          console.debug('[place-filter] Checking if place exists', newPlace.place_id, isUnique)
-          return isUnique
-        }
-
-        const existing = _.cloneDeep(this.$data.places)
-        if (existing.length >= 200) {
-          existing.splice(0, newPlaces.length)
-        }
-
-        const unique = newPlaces.filter(placeFilter)
-        this.$data.places = [...existing, ...unique]
-      }
-
-      const fetchPlaces = async () => {
-        const places = await getPlacesInBounds(e);
-        appendPlaces(places)
-      }
-      return _.debounce(fetchPlaces, 1000, { leading: true, trailing: false })()
-    }
   },
   mounted() {
     this.$nextTick().then(() => {
       this.$refs.primaryMap.mapObject.invalidateSize();
     });
   },
-  components: { BaseMarkers, InfoWindow }
+  components: { InfoWindow, MarkerGroup }
 }
 </script>
