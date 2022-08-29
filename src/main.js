@@ -10,7 +10,7 @@ import VueCompositionAPI from "@vue/composition-api";
 import "./registerServiceWorker";
 import FirebaseVuePlugin from "@/plugins/firebase";
 import piniaPluginPersistedState from "pinia-plugin-persistedstate";
-import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LLayerGroup } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 
@@ -30,6 +30,7 @@ Vue.use(Plugin);
 Vue.use(FirebaseVuePlugin);
 Vue.component("l-map", LMap);
 Vue.component("l-tile-layer", LTileLayer);
+Vue.component("l-layer-group", LLayerGroup);
 Vue.component("l-marker", LMarker);
 
 Vue.config.productionTip = false;
