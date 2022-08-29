@@ -7,11 +7,7 @@
     :center="center"
   >
     <l-tile-layer :url="tileUrl" />
-    <!-- <BaseMarkers
-      :places="places"
-      @click:marker="showInfoWindow"
-    /> -->
-    <MarkerGroup :bounds="bounds" />
+    <MarkerGroup :bounds="bounds" @click:marker="showInfoWindow" />
     <InfoWindow
       :place="inspectedPlace"
       :open="infoWindowOpen"
@@ -22,8 +18,6 @@
 
 <script>
 import { useSavedPlacesStore } from '@/store/savedPlaces'
-import { collection, onSnapshot } from '@firebase/firestore'
-import { useAuthStore } from "@/store/authStore"
 import InfoWindow from "./InfoWindow.vue"
 import MarkerGroup from "./MarkerGroup.vue"
 
@@ -49,20 +43,7 @@ export default {
   },
   methods: {
     handleBoundsChange (e) {
-      this.$data.bounds(e)
-    },
-    unsubscribe() {
-      const authStore = useAuthStore()
-      const savedPlacesStore = useSavedPlacesStore()
-
-      return onSnapshot(collection(`journals/${authStore.user.uid}`), snapshot => {
-        snapshot.docChanges().forEach(change => {
-          if (change.type === 'added' || change.type === 'modified') {
-            savedPlacesStore.append(change.doc.data())
-          }
-          if (change.type === 'remove') savedPlacesStore.remove(change.doc.id)
-        })
-      })
+      this.$data.bounds = e
     },
     showInfoWindow(place) {
       this.$data.inspectedPlace = place

@@ -1,13 +1,16 @@
 <template>
-  <fragment>
-    <BaseMarkers :places="places" />
-  </fragment>
+  <l-layer-group>
+    <BaseMarkers :places="places" @click:marker="handleMarkerClick" />
+  </l-layer-group>
 </template>
 
 <script>
 import { getPlacesInBounds } from '@/api/placesQueries';
 import _ from "lodash"
 import BaseMarkers from './BaseMarkers.vue';
+import { useSavedPlacesStore } from '@/store/savedPlaces';
+import { useAuthStore } from '@/store/authStore';
+import { collection, onSnapshot } from '@firebase/firestore';
 
 export default {
   name: "MarkerGroup",
@@ -28,6 +31,22 @@ export default {
     }
   },
   methods: {
+    handleMarkerClick(e) {
+      this.$emit('click:marker', e)
+    },
+    unsubscribe() {
+      const authStore = useAuthStore()
+      const savedPlacesStore = useSavedPlacesStore()
+
+      return onSnapshot(collection(`journals/${authStore.user.uid}`), snapshot => {
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'added' || change.type === 'modified') {
+            savedPlacesStore.append(change.doc.data())
+          }
+          if (change.type === 'remove') savedPlacesStore.remove(change.doc.id)
+        })
+      })
+    },
     handleBoundsChange(e) {
       const appendPlaces = (newPlaces) => {
         if (!this.$data.places.length) {

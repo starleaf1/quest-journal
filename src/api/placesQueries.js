@@ -9,13 +9,19 @@ const service = new google.maps.places.PlacesService(
 export const getPlaceDetails = (
   placeId,
   fields = [
+    "address_components",
     "formatted_address",
     "business_status",
     "formatted_phone_number",
     "opening_hours",
+    "type",
   ]
 ) =>
   new Promise((resolve, reject) => {
+    console.log(
+      "[fetch-place-details] Fetching details from Places API",
+      placeId
+    );
     service.getDetails({ placeId, fields }, (result, status) => {
       if (status !== google.maps.places.PlacesServiceStatus.OK) reject(result);
       resolve(result);
