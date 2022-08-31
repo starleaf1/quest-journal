@@ -35,6 +35,14 @@ Vue.component("l-marker", LMarker);
 
 Vue.config.productionTip = false;
 
+Vue.mixin({
+  computed: {
+    isOnPC() {
+      return !this.$vuetify.breakpoint.mobile;
+    },
+  },
+});
+
 new Vue({
   vuetify,
   router,

@@ -1,6 +1,10 @@
 <template>
-  <v-dialog :value="open" @click:outside="handleCloseDialog">
-    <v-sheet min-height="300px">
+  <v-dialog
+    :fullscreen="!isOnPC"
+    :value="open"
+    @click:outside="handleCloseDialog"
+  >
+    <v-sheet :min-height="isOnPC ? '300px' : '100%'">
       <v-toolbar flat>
         <div>
           <h5 class="text-h6 pb-0">{{place?.name}}</h5>
@@ -32,7 +36,7 @@
       </v-container>
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
-        <OpeningHours :opening-hours="placeData?.opening_hours" :permanently-closed="placeData?.business_status === 'CLOSED_PERMANENTLY'" />
+        <OpeningHours v-if="placeData?.opening_hours" :opening-hours="placeData?.opening_hours" :business-status="placeData?.business_status" />
       </v-card-text>
     </v-sheet>
   </v-dialog>
@@ -43,58 +47,61 @@ import { usePlaceDetailsStore } from '@/store/placeDetails'
 import OpeningHours from './OpeningHours.vue'
 
 export default {
-    name: "PlaceDetailsDialog",
-    props: {
-        open: {
-            default: () => false
-        },
-        place: {
-            default: () => ({})
-        }
+  name: "PlaceDetailsDialog",
+  mounted () {
+    console.log('[breakpoints] Is on PC', this.isOnPC)
+  },
+  props: {
+    open: {
+      default: () => false
     },
-    computed: {
-        placeTags() {
-            return this.placeData.types.map?.(type => {
-                const spaced = type.replace(/_/g, " ");
-                return `${spaced.charAt(0).toUpperCase()}${spaced.slice(1)}`;
-            });
-        },
-        placeData() {
-            return {
-                ...this.place,
-                ...this.placeDetails
-            };
-        }
+    place: {
+      default: () => ({})
+    }
+  },
+  computed: {
+    placeTags() {
+      return this.placeData.types.map?.(type => {
+        const spaced = type.replace(/_/g, " ");
+        return `${spaced.charAt(0).toUpperCase()}${spaced.slice(1)}`;
+      });
     },
-    data() {
-        return ({
-            placeDetails: {},
-            loading: false
-        });
+    placeData() {
+      return {
+        ...this.place,
+        ...this.placeDetails
+      };
+    }
+  },
+  data() {
+    return ({
+      placeDetails: {},
+      loading: false
+    });
+  },
+  methods: {
+    handleCloseDialog() {
+      this.$emit("click:outside");
     },
-    methods: {
-        handleCloseDialog() {
-            this.$emit("click:outside");
-        },
-        async getPlaceDetails(placeId) {
-            const placeDetailsStore = usePlaceDetailsStore();
-            try {
-                this.$data.loading = true;
-                this.$data.placeDetails = await placeDetailsStore.getDetailsById(placeId);
-            }
-            catch (e) {
-                console.error(e);
-            }
-            finally {
-                this.$data.loading = false;
-            }
-        }
-    },
-    watch: {
-        place(v) {
-            this.getPlaceDetails(v?.place_id);
-        }
-    },
-    components: { OpeningHours }
+    async getPlaceDetails(placeId) {
+      const placeDetailsStore = usePlaceDetailsStore();
+      try {
+        this.$data.loading = true;
+        this.$data.placeDetails = await placeDetailsStore.getDetailsById(placeId);
+      }
+      catch (e) {
+        console.error(e);
+      }
+      finally {
+        this.$data.loading = false;
+      }
+    }
+  },
+  watch: {
+    place(v) {
+      this.getPlaceDetails(v?.place_id);
+    }
+  },
+  components: { OpeningHours }
 }
 </script>

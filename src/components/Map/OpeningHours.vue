@@ -1,8 +1,8 @@
 <template>
   <v-tooltip top>
-    <fragment v-if="!['permanently-closed']">
+    <fragment v-if="chipColor !== 'danger'">
       <div
-        v-for="day in ['opening-hours'].weekday_text"
+        v-for="day in openingHours.weekday_text"
         :key="day"
       >
         {{day}}
@@ -25,24 +25,30 @@ export default {
       type: Object,
       required: true
     },
-    'permanently-closed': {
-      type: Boolean,
-      default: () => false
+    'business-status': {
+      type: String,
+      default: () => 'OPERATIONAL'
     }
   },
   computed: {
     chipColor () {
-      if (this['permanently-closed']) return 'red'
-      if (this.isOpen) return 'green'
-      return false
+      if (this.isOpen) return 'success'
+      switch (this.business_status) {
+        case 'TEMPORARILY_CLOSED':
+          return 'warning';
+        case 'PERMANENTLY_CLOSED':
+          return 'danger';
+        default:
+          return undefined;
+      }
     },
     chipLabel () {
-      if (this['permanently-closed']) return 'Permanently closed'
+      if (this.chipColor === 'danger') return 'Permanently closed'
       if (this.isOpen) return 'Currently open'
       return 'Currently closed'
     },
     isOpen () {
-      return this['opening-hours']?.isOpen()
+      return this.openingHours.isOpen()
     }
   }
 }

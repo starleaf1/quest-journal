@@ -14,6 +14,7 @@ export const getPlaceDetails = (
     "business_status",
     "formatted_phone_number",
     "opening_hours",
+    "utc_offset_minutes",
     "type",
   ]
 ) =>
