@@ -58,9 +58,6 @@ import OpeningHours from './OpeningHours.vue'
 
 export default {
   name: "PlaceDetailsDialog",
-  mounted () {
-    console.log('[breakpoints] Is on PC', this.isOnPC)
-  },
   props: {
     open: {
       default: () => false
