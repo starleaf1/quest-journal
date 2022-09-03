@@ -4,10 +4,13 @@
     :value="open"
     @click:outside="handleCloseDialog"
   >
-    <v-sheet :min-height="isOnPC ? '300px' : '100%'">
-      <v-toolbar flat>
-        <div>
-          <h5 class="text-h6 pb-0">{{place?.name}}</h5>
+    <v-sheet :min-height="isOnPC ? '300px' : '100%'" width="100%">
+      <v-toolbar dense>
+        <v-btn icon @click="handleCloseDialog">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <h5 class="text-h6 pb-0">{{place?.name}}</h5>
+        <template #extension>
           <v-chip-group class="pt-0 ma-0">
             <v-chip
               v-for="tag in placeTags ?? []"
@@ -18,15 +21,22 @@
               v-text="tag"
             />
           </v-chip-group>
-        </div>
-        <v-spacer />
-        <v-btn color="primary">
-          <v-icon left>mdi-pin</v-icon>
-          <span>Add marker</span>
-        </v-btn>
-        <v-btn icon color="primary">
-          <v-icon>mdi-navigation</v-icon>
-        </v-btn>
+          <v-tooltip bottom>
+            <span>Add to collection</span>
+            <template #activator="{ on }">
+              <v-btn
+                fab v-on="on"
+                color="accent"
+                :small="!isOnPC"
+                right
+                bottom
+                absolute
+              >
+                <v-icon>mdi-pin</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </template>
       </v-toolbar>
       <v-container class="fill-height" v-if="loading">
         <v-row align="center" justify="center">
@@ -61,7 +71,7 @@ export default {
   },
   computed: {
     placeTags() {
-      return this.placeData.types.map?.(type => {
+      return this.placeData.types?.map?.(type => {
         const spaced = type.replace(/_/g, " ");
         return `${spaced.charAt(0).toUpperCase()}${spaced.slice(1)}`;
       });
