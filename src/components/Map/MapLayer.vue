@@ -18,7 +18,7 @@
 
 <script>
 import { useSavedPlacesStore } from '@/store/savedPlaces'
-import InfoWindow from "./InfoWindow.vue"
+import InfoWindow from "./InfoWindow"
 import MarkerGroup from "./MarkerGroup.vue"
 
 export default {
