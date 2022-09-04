@@ -46,7 +46,12 @@
       </v-container>
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
-        <OpeningHours v-if="placeData?.opening_hours" :opening-hours="placeData?.opening_hours" :business-status="placeData?.business_status" />
+        <OpeningHours
+          v-if="placeData?.opening_hours"
+          :opening-hours="placeData?.opening_hours"
+          :business-status="placeData?.business_status"
+        />
+        <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" />
       </v-card-text>
     </v-sheet>
   </v-dialog>
@@ -54,7 +59,9 @@
 
 <script>
 import { usePlaceDetailsStore } from '@/store/placeDetails'
+import { mapActions } from 'pinia';
 import OpeningHours from './OpeningHours.vue'
+import PhotoGallery from './PhotoGallery/index.vue';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -87,14 +94,16 @@ export default {
     });
   },
   methods: {
+    ...mapActions(usePlaceDetailsStore, 'getDetailsById'),
+
     handleCloseDialog() {
       this.$emit("click:outside");
     },
     async getPlaceDetails(placeId) {
-      const placeDetailsStore = usePlaceDetailsStore();
+      console.log('[info-window] Displaying details for place', placeId)
       try {
         this.$data.loading = true;
-        this.$data.placeDetails = await placeDetailsStore.getDetailsById(placeId);
+        this.$data.placeDetails = await this.getDetailsById(placeId);
       }
       catch (e) {
         console.error(e);
@@ -109,6 +118,6 @@ export default {
       this.getPlaceDetails(v?.place_id);
     }
   },
-  components: { OpeningHours }
+  components: { OpeningHours, PhotoGallery }
 }
 </script>

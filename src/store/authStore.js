@@ -12,14 +12,6 @@ export const useAuthStore = defineStore("auth", {
   },
   actions: {
     storeAuthData(userData) {
-      sessionStorage.setItem(
-        "auth",
-        JSON.stringify({
-          isAuthenticated: true,
-          user: userData,
-          isFetchingAuth: false,
-        })
-      );
       this.isAuthenticated = true;
       this.user = userData;
       this.isFetchingAuth = false;
@@ -29,6 +21,9 @@ export const useAuthStore = defineStore("auth", {
       this.user = null;
       this.isFetchingAuth = false;
     },
+    clearOriginalDestination () {
+      this.originalDestination = null
+    }
   },
   persist: {
     storage: sessionStorage,

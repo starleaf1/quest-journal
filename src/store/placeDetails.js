@@ -8,10 +8,11 @@ export const usePlaceDetailsStore = defineStore("placeDetailsCache", {
   }),
   actions: {
     async getDetailsById(id, fresh = 7 * 24 * 3600 * 1000) {
+      console.log("[place-details-cache] Getting details from place", id)
       const now = new Date();
       const detailsFromCache = this.places.find(
         (place) =>
-          place.place_id === id && detailsFromCache.fetchedAt - now <= fresh
+          place.place_id === id && place.fetchedAt - now <= fresh
       );
       if (detailsFromCache) {
         console.log(

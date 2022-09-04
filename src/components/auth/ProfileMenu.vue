@@ -23,13 +23,15 @@
 <script>
 import { useAuthStore } from '@/store/authStore';
 import { signOut } from '@firebase/auth';
+import { mapActions, mapState } from 'pinia';
 
 export default {
   name: "ProfileMenu",
   computed: {
+    ...mapState(useAuthStore, ['user', 'uid', 'isAuthenticated']),
     initials () {
-      const authStore = useAuthStore()
-      let names = authStore.user?.displayName.split(' ')
+      // const authStore = useAuthStore()
+      let names = this.user?.displayName.split(' ')
       if (!names) return
       names.splice(1, names.length - 2)
       return `${names[0].substr(0, 1)}${names[1].substr(0, 1)}`
@@ -41,6 +43,9 @@ export default {
     })
   },
   methods: {
+    ...mapActions(useAuthStore, [
+      'clearAuthData', 'storeAuthData'
+    ]),
     async onLogoutClick () {
       try {
         await signOut(this.$firebase.auth)

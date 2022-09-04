@@ -10,6 +10,7 @@
 <script>
 import { onAuthStateChanged } from "firebase/auth"
 import { useAuthStore } from "@/store/authStore"
+import { mapActions } from "pinia"
 
 export default {
   computed: {
@@ -21,13 +22,15 @@ export default {
       return authStore.isFetchingAuth
     }
   },
+  methods: {
+    ...mapActions(useAuthStore, ['storeAuthData', 'clearAuthData']),
+  },
   mounted () {
     onAuthStateChanged(this.$firebase.auth, user => {
-      const auth = useAuthStore()
       if (user) {
-        auth.storeAuthData(user)
+        this.storeAuthData(user)
       } else {
-        auth.clearAuthData()
+        this.clearAuthData()
       }
     })
   }
