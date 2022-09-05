@@ -94,7 +94,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(usePlaceDetailsStore, 'getDetailsById'),
+    ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
 
     handleCloseDialog() {
       this.$emit("click:outside");
