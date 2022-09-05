@@ -83,7 +83,7 @@ export default {
     placeData() {
       return {
         ...this.place,
-        ...this.placeDetails
+        ...this.$data.placeDetails
       };
     }
   },
