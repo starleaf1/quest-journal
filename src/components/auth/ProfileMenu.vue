@@ -30,7 +30,6 @@ export default {
   computed: {
     ...mapState(useAuthStore, ['user', 'uid', 'isAuthenticated']),
     initials () {
-      // const authStore = useAuthStore()
       let names = this.user?.displayName.split(' ')
       if (!names) return
       names.splice(1, names.length - 2)

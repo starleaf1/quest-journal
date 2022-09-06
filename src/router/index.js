@@ -1,4 +1,4 @@
-// import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/store/authStore";
 import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
@@ -32,16 +32,15 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   console.log("[router] New route requested", to.path);
-  // const auth = useAuthStore();
-  const auth = JSON.parse(sessionStorage.getItem("auth"));
-  console.debug("[router] Displaying auth for debug", auth);
+  const authStore = useAuthStore();
+  console.debug("[router] Displaying auth for debug", authStore);
 
   const routeRequiresAuth = to.matched.some(
     (record) => record.meta?.authRequired
   );
-  if (!auth?.isAuthenticated && routeRequiresAuth) {
+  if (!authStore?.isAuthenticated && routeRequiresAuth) {
     console.log("[router] Protected route. Requesting authentication");
-    auth.originalDestination = to.path;
+    authStore.originalDestination = to.path;
     return next("/login");
   } else {
     if (routeRequiresAuth)
