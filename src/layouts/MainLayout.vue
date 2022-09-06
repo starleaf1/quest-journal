@@ -17,16 +17,14 @@
 <script>
 import ProfileMenu from "@/components/auth/ProfileMenu.vue";
 import { useMiscStore } from '@/store';
+import { mapActions } from 'pinia'
 export default {
   name: 'MainLayout',
   components: {
     ProfileMenu
   },
   methods: {
-    handleNavButtonClick () {
-      const miscStore = useMiscStore()
-      miscStore.toggleDrawer()
-    }
+    ...mapActions(useMiscStore, { handleNavButtonClick: 'toggleDrawer' })
   }
 }
 </script>

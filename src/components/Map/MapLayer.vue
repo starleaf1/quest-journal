@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
 import { useSavedPlacesStore } from '@/store/savedPlaces'
 import InfoWindow from "./InfoWindow"
 import MarkerGroup from "./MarkerGroup.vue"
@@ -25,10 +26,7 @@ export default {
   name: "MapLayer",
   computed: {
     savedPlaces: {
-      get() {
-        const savedPlacesStore = useSavedPlacesStore()
-        return savedPlacesStore.savedPlaces
-      }
+      ...mapState(useSavedPlacesStore, ['savedPlaces'])
     },
   },
   data() {

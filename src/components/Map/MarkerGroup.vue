@@ -10,6 +10,7 @@ import _ from "lodash"
 import BaseMarkers from './BaseMarkers.vue';
 import { useSavedPlacesStore } from '@/store/savedPlaces';
 import { useAuthStore } from '@/store/authStore';
+import { mapState, mapActions } from 'pinia'
 import { collection, onSnapshot } from '@firebase/firestore';
 
 export default {
@@ -19,6 +20,9 @@ export default {
     bounds: {
       required: true
     }
+  },
+  computed: {
+    ...mapState(useAuthStore, ['uid'])
   },
   data () {
     return ({
@@ -34,16 +38,14 @@ export default {
     handleMarkerClick(e) {
       this.$emit('click:marker', e)
     },
+    ...mapActions(useSavedPlacesStore, ['append', 'remove']),
     unsubscribe() {
-      const authStore = useAuthStore()
-      const savedPlacesStore = useSavedPlacesStore()
-
-      return onSnapshot(collection(`journals/${authStore.user.uid}`), snapshot => {
+      return onSnapshot(collection(`journals/${this.uid}`), snapshot => {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added' || change.type === 'modified') {
-            savedPlacesStore.append(change.doc.data())
+            this.append(change.doc.data())
           }
-          if (change.type === 'remove') savedPlacesStore.remove(change.doc.id)
+          if (change.type === 'remove') this.remove(change.doc.id)
         })
       })
     },
