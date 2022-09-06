@@ -9,7 +9,6 @@ import { Plugin } from "vue-fragment";
 import VueCompositionAPI from "@vue/composition-api";
 import "./registerServiceWorker";
 import FirebaseVuePlugin from "@/plugins/firebase";
-import piniaPluginPersistedState from "pinia-plugin-persistedstate";
 import { LMap, LTileLayer, LMarker, LLayerGroup } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
@@ -23,7 +22,6 @@ Icon.Default.mergeOptions({
 
 const pinia = createPinia();
 setActivePinia(pinia);
-pinia.use(piniaPluginPersistedState);
 Vue.use(PiniaVuePlugin);
 Vue.use(VueCompositionAPI);
 Vue.use(Plugin);
