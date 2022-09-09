@@ -1,4 +1,9 @@
-const functions = require("firebase-functions");
+require('./init')
+const authHooks = require('./auth-hooks')
+
+module.exports = {
+    ...authHooks
+}
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
