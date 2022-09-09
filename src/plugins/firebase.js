@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectFirestoreEmulator, enableIndexedDbPersistence, getFirestore } from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
@@ -25,6 +25,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   connectFirestoreEmulator(db, "localhost", 8080);
   connectStorageEmulator(storage, "localhost", 9199);
 }
+
+enableIndexedDbPersistence(db).catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
 
 export default {
   install(Vue) {
