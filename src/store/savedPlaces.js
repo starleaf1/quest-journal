@@ -1,60 +1,28 @@
+import { db } from "@/plugins/firebase";
+import { collection, deleteDoc, doc, onSnapshot, setDoc } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { db } from "@/plugins/firebase";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  setDoc,
-} from "firebase/firestore";
 import { useAuthStore } from "./authStore";
 
-// export const useSavedPlacesStore = defineStore("savedPlaces", {
-//   state: () => ({ savedPlaces: [] }),
-//   actions: {
-//     append(place) {
-//       if (
-//         this.savedPlaces.some(
-//           (savedPlace) => savedPlace.place_id === place.place_id
-//         )
-//       ) {
-//         this.remove(place.place_id);
-//       }
-//       this.savedPlaces.push(place);
-//     },
-//     remove(placeId) {
-//       this.savedPlaces = this.savedPlaces.filter(
-//         (savedPlace) => savedPlace.place_id !== placeId
-//       );
-//     },
-//   },
-//   persist: {
-//     storage: sessionStorage,
-//   },
-// });
+export const useSavedPlacesStore = defineStore('savedPlacesStore', () => {
+  const authStore = useAuthStore()
 
-export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
-  const savedPlaces = ref([]);
-  const authStore = useAuthStore();
-  const colRef = collection(db, `userData/${authStore.uid}/savedPlaces`);
+  const savedPlaces = ref([])
 
-  const unsubscribe = onSnapshot(colRef, (placesSnapshot) => {
-    savedPlaces.value = placesSnapshot.docs.map(({ id, data }) => ({
-      id,
-      ...data(),
-    }));
-  });
+  const colRef = collection(db, `userData/${authStore.uid}/places`)
+  const unsubscribe = onSnapshot(colRef, colSnap => {
+    savedPlaces.value = colSnap.docs.map(({ id, data }) => ({ id, ...data() }))
+  })
 
   async function append(place) {
-    const docRef = doc(colRef, place.place_id);
-    await setDoc(docRef, place);
+    const docRef = doc(colRef, place.place_id)
+    await setDoc(docRef, place)
   }
 
-  async function remove(place_id) {
-    const docRef = doc(colRef, place_id);
-    await deleteDoc(docRef);
+  async function remove(placeId) {
+    const docRef = doc(colRef, placeId)
+    await deleteDoc(docRef)
   }
 
-  return { append, remove, savedPlaces, unsubscribe };
-});
+  return { savedPlaces, append, remove, unsubscribe }
+})
