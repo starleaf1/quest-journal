@@ -58,7 +58,14 @@ export default {
       const place_id = uuid()
       this.showInfoWindow({
         place_id,
-        location,
+
+        // Need to adapt to Places API's formatting, which is method-based
+        geometry: {
+          location: {
+            lat: () => location.lat,
+            lng: () => location.lng
+          }
+        },
         name
       })
     },
