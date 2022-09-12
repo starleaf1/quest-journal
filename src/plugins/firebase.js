@@ -26,6 +26,8 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   connectStorageEmulator(storage, "localhost", 9199);
 }
 
+export { app, db, functions, auth, storage };
+
 export default {
   install(Vue) {
     Vue.prototype.$firebase = { app, db, functions, auth, storage };
