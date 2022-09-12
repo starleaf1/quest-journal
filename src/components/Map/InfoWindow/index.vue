@@ -40,7 +40,7 @@
                 </template>
               </v-tooltip>
             </template>
-            <InfoInput @cancel="saveDialogOpen = false" />
+            <InfoInput :place="place" @cancel="saveDialogOpen = false" />
           </v-dialog>
         </template>
       </v-toolbar>
