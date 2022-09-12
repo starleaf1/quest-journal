@@ -1,10 +1,10 @@
 <template>
   <v-dialog
-    :fullscreen="!isOnPC"
+    fullscreen
     :value="open"
     @click:outside="handleCloseDialog"
   >
-    <v-sheet :min-height="isOnPC ? '300px' : '100%'" width="100%">
+    <v-sheet height="100%" width="100%">
       <v-toolbar dense>
         <v-btn icon @click="handleCloseDialog">
           <v-icon>mdi-close</v-icon>
