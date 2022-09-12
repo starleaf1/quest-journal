@@ -28,6 +28,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 
 enableIndexedDbPersistence(db).then(() => { console.log('[db-persistence] Database persistence is enabled on this device.') }).catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
 
+export { app, db, functions, auth, storage };
 export default {
   install(Vue) {
     Vue.prototype.$firebase = { app, db, functions, auth, storage };
