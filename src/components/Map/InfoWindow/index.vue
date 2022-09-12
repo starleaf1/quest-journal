@@ -1,11 +1,11 @@
 <template>
   <v-dialog
-    :fullscreen="!isOnPC"
+    fullscreen
     :value="open"
     @click:outside="handleCloseDialog"
   >
-    <v-sheet :min-height="isOnPC ? '300px' : '100%'" width="100%">
-      <v-toolbar dense>
+    <v-sheet height="100%" width="100%">
+      <v-toolbar dense color="primary" dark>
         <v-btn icon @click="handleCloseDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -21,21 +21,27 @@
               v-text="tag"
             />
           </v-chip-group>
-          <v-tooltip bottom>
-            <span>Add to collection</span>
-            <template #activator="{ on }">
-              <v-btn
-                fab v-on="on"
-                color="accent"
-                :small="!isOnPC"
-                right
-                bottom
-                absolute
-              >
-                <v-icon>mdi-pin</v-icon>
-              </v-btn>
+          <v-dialog v-model="saveDialogOpen">
+            <template #activator="{ on: dialog }">
+              <v-tooltip bottom>
+                <span>Add to collection</span>
+                <template #activator="{ on: tooltip}">
+                  <v-btn
+                    fab
+                    v-on="{ ...tooltip, ...dialog }"
+                    color="accent"
+                    :small="!isOnPC"
+                    right
+                    bottom
+                    absolute
+                  >
+                    <v-icon>mdi-pin</v-icon>
+                  </v-btn>
+                </template>
+              </v-tooltip>
             </template>
-          </v-tooltip>
+            <InfoInput @cancel="saveDialogOpen = false" />
+          </v-dialog>
         </template>
       </v-toolbar>
       <v-container class="fill-height" v-if="loading">
@@ -62,6 +68,7 @@ import { usePlaceDetailsStore } from '@/store/placeDetails'
 import { mapActions } from 'pinia';
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
+import InfoInput from './InfoInput/index.vue';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -89,6 +96,7 @@ export default {
   },
   data() {
     return ({
+      saveDialogOpen: false,
       placeDetails: {},
       loading: false
     });
@@ -118,6 +126,6 @@ export default {
       this.getPlaceDetails(v?.place_id);
     }
   },
-  components: { OpeningHours, PhotoGallery }
+  components: { OpeningHours, PhotoGallery, InfoInput }
 }
 </script>
