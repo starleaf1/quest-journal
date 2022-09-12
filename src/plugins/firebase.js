@@ -13,11 +13,11 @@ const firebaseConfig = {
   appId: "1:101975172369:web:2fb8795df427f0c2a9d8b0",
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const functions = getFunctions(app);
-const auth = getAuth(app);
-const storage = getStorage(app);
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const functions = getFunctions(app);
+export const auth = getAuth(app);
+export const storage = getStorage(app);
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   connectFunctionsEmulator(functions, "localhost", 5001);
@@ -26,7 +26,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   connectStorageEmulator(storage, "localhost", 9199);
 }
 
-enableIndexedDbPersistence(db).catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
+enableIndexedDbPersistence(db).then(() => { console.log('[db-persistence] Database persistence is enabled on this device.') }).catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
 
 export default {
   install(Vue) {
