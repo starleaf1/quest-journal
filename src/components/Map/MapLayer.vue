@@ -3,11 +3,15 @@
     style="height: 100%; z-index: 0;"
     ref="primaryMap"
     @update:bounds="handleBoundsChange"
+    @contextmenu="handleContextClick"
     :zoom="11"
     :center="center"
   >
     <l-tile-layer :url="tileUrl" />
-    <MarkerGroup :bounds="bounds" @click:marker="showInfoWindow" />
+    <MarkerGroup
+      :bounds="bounds"
+      @click:marker="showInfoWindow"
+    />
     <InfoWindow
       :place="inspectedPlace"
       :open="infoWindowOpen"
@@ -21,6 +25,7 @@ import { mapState } from 'pinia'
 import { useSavedPlacesStore } from '@/store/savedPlaces'
 import InfoWindow from "./InfoWindow"
 import MarkerGroup from "./MarkerGroup.vue"
+import { v4 as uuid } from 'uuid'
 
 export default {
   name: "MapLayer",
@@ -47,7 +52,18 @@ export default {
       this.$data.inspectedPlace = place
       this.$data.infoWindowOpen = true
     },
+    handleContextClick(e) {
+      const { latlng: location } = e
+      const name = `${Math.abs(location.lat)}${location.lat >= 0 ? 'N' : 'S'}, ${Math.abs(location.lng)}${location.lng >= 0 ? 'E' : 'W'}`
+      const place_id = uuid()
+      this.showInfoWindow({
+        place_id,
+        location,
+        name
+      })
+    },
     hideInfoWindow() {
+      this.$data.inspectedPlace = null
       this.$data.infoWindowOpen = false
     },
   },
