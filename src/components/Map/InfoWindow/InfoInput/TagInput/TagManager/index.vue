@@ -12,7 +12,12 @@
       </v-list>
     </v-card-text>
     <v-card-actions>
-      <v-btn text>Add new</v-btn>
+      <v-menu v-model="addNewMenuOpen" :close-on-content-click="false">
+        <NewTag />
+        <template #activator="{ on }">
+          <v-btn text v-on="on"><v-icon left>mdi-plus</v-icon>Add new</v-btn>
+        </template>
+      </v-menu>
       <v-btn text :disabled="!checkedIds.length">Delete <span v-if="checkedIds?.length" selected>{{ checkedIds?.length }} items</span></v-btn>
       <v-spacer />
       <v-btn color="primary" @click="handleCloseClicked">Done</v-btn>
@@ -26,9 +31,10 @@ import { useAuthStore } from '@/store/authStore'
 import { useTagsStore } from '@/store/tagsStore'
 import { mapState } from 'pinia'
 import TagItem from './TagItem.vue'
+import NewTag from './NewTag.vue'
 
 export default {
-  components: { TagItem },
+  components: { TagItem, NewTag },
   name: 'TagManager',
   computed: {
     ...mapState(useAuthStore, ['uid']),
@@ -36,6 +42,7 @@ export default {
   },
   data () {
     return {
+      addNewMenuOpen: false,
       checkedIds: []
     }
   },

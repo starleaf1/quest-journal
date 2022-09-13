@@ -1,5 +1,11 @@
 import { db } from "@/plugins/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useAuthStore } from "./authStore";
@@ -11,8 +17,15 @@ export const useTagsStore = defineStore("tagsStore", () => {
 
   const colRef = collection(db, `userData/${authStore.uid}/tags`);
   const unsubscribe = onSnapshot(colRef, (snapShot) => {
-    tags.value = snapShot.docs.map(({ id, data }) => ({ id, ...data() }));
+    tags.value = snapShot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   });
 
-  return { tags, unsubscribe };
+  async function append({ name }) {
+    await addDoc(colRef, { name });
+  }
+  async function remove(tagId) {
+    await deleteDoc(doc(db, `userData/${authStore.uid}/tags/${tagId}`));
+  }
+
+  return { tags, unsubscribe, append, remove };
 });
