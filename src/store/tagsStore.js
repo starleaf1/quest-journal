@@ -5,6 +5,7 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  setDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -23,9 +24,14 @@ export const useTagsStore = defineStore("tagsStore", () => {
   async function append({ name }) {
     await addDoc(colRef, { name });
   }
+  async function edit(id, name) {
+    console.log("[edit-tag]", { id, name });
+    const docRef = doc(colRef, id);
+    await setDoc(docRef, { name }, { merge: true });
+  }
   async function remove(tagId) {
     await deleteDoc(doc(db, `userData/${authStore.uid}/tags/${tagId}`));
   }
 
-  return { tags, unsubscribe, append, remove };
+  return { tags, unsubscribe, append, remove, edit };
 });

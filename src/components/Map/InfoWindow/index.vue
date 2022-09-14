@@ -21,11 +21,11 @@
               v-text="tag"
             />
           </v-chip-group>
-          <v-dialog v-model="saveDialogOpen">
+          <v-dialog :fullscreen="!isOnPC" v-model="saveDialogOpen">
             <template #activator="{ on: dialog }">
               <v-tooltip bottom>
                 <span>Add to collection</span>
-                <template #activator="{ on: tooltip}">
+                <template #activator="{ on: tooltip }">
                   <v-btn
                     fab
                     v-on="{ ...tooltip, ...dialog }"

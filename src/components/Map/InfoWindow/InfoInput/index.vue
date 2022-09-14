@@ -4,13 +4,22 @@
       <v-card-title>Save this place</v-card-title>
       <v-card-text>
         <v-textarea :disabled="isSubmitting" outlined v-model="notes" label="Notes" />
-        <v-autocomplete :disabled="isSubmitting" single-line outlined label="Tags" v-model="tags">
+        <v-autocomplete
+          label="Tags"
+          :disabled="isSubmitting"
+          :items="tags"
+          item-text="name"
+          item-value="name"
+          v-model="tagsForPlace"
+          chips
+          multiple
+        >
           <template #append-outer>
             <v-dialog v-model="managerOpen">
               <template #activator="{ on }">
-                <v-btn v-on="on"><v-icon left>mdi-list-status</v-icon>Manage</v-btn>
+                <v-btn text v-on="on"><v-icon left>mdi-list-status</v-icon>Manage</v-btn>
               </template>
-              <TagManager />
+              <TagManager @close="managerOpen = false" />
             </v-dialog>
           </template>
         </v-autocomplete>
@@ -26,7 +35,8 @@
 <script>
 import TagManager from './TagInput/TagManager/index.vue';
 import { useSavedPlacesStore } from '@/store/savedPlaces';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
+import { useTagsStore } from '@/store/tagsStore';
 
 export default {
   name: "InfoInput",
@@ -36,11 +46,14 @@ export default {
       type: Object
     }
   },
+  computed: {
+    ...mapState(useTagsStore, ['tags'])
+  },
   data() {
     return ({
       dialogOpen: false,
       managerOpen: false,
-      tags: [],
+      tagsForPlace: [],
       notes: '',
       isSubmitting: false
     });
@@ -53,7 +66,7 @@ export default {
     async handleSaveClick() {
       try {
         this.$data.isSubmitting = true
-        await this.append({ ...this.place, notes: this.notes, tags: this.tags })
+        await this.append({ ...this.place, notes: this.notes, tags: this.$data.tagsForPlace })
         this.closeDialog()
       } catch (e) {
         console.error('[save-place] Cannot save place', e)

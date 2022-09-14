@@ -1,20 +1,20 @@
 <template>
   <v-card>
     <v-form>
-      <v-card-title>New Tag</v-card-title>
+      <v-card-title>{{ editId ? 'Edit' : 'New'}} Tag</v-card-title>
       <v-card-text>
         <v-text-field
           label="Name"
+          v-model="internalName"
           :disabled="isSubmitting"
         >
           <template #append-outer>
             <v-btn
               icon
-              :disabled="name.length > 0"
+              :disabled="internalName.length <= 0"
               :loading="isSubmitting"
               @click="handleOkClick"
             ><v-icon>mdi-check</v-icon></v-btn>
-            <v-btn icon @click="handleCancelClick"><v-icon>mdi-close</v-icon></v-btn>
           </template>
         </v-text-field>
       </v-card-text>
@@ -28,15 +28,29 @@ import { useTagsStore } from '@/store/tagsStore'
 
 export default {
   name: 'NewTag',
+  props: {
+    editId: {
+      type: String
+    },
+    name: {
+      type: String,
+      default: () => ''
+    }
+  },
   methods: {
-    ...mapActions(useTagsStore, ['append', 'remove']),
+    ...mapActions(useTagsStore, ['append', 'remove', 'edit']),
     async handleOkClick() {
       try {
         this.$data.isSubmitting = true
-        await this.append({
-          name: this.$data.name
-        })
+        if (!this.editId) {
+          await this.append({
+            name: this.$data.internalName
+          })
+        } else {
+          await this.edit(this.editId, this.$data.internalName)
+        }
         this.$emit('submit')
+        this.$destroy()
       } catch (e) {
         this.$emit('error')
         console.error(e)
@@ -51,7 +65,7 @@ export default {
   },
   data () {
     return ({
-      name: '',
+      internalName: this.name,
       isSubmitting: false,
       error: false
     })
