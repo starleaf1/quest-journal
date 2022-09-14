@@ -1,5 +1,5 @@
 <template>
-  <v-img :class="{ 'elevation-2': active }" :src="src" height="300px" :aspect-ratio="image.height / image.width" contain />
+  <v-img :class="{ 'elevation-2': active }" :src="src" height="300" max-width="300" />
 </template>
 
 <script>
@@ -18,9 +18,6 @@ export default {
   computed: {
     src () {
       return this.image?.getUrl()
-    },
-    aspectRatio () {
-      return this.image.height / this.image.width
     }
   }
 }

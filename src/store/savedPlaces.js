@@ -8,16 +8,26 @@ export const useSavedPlacesStore = defineStore('savedPlacesStore', () => {
   const authStore = useAuthStore()
 
   const savedPlaces = ref([])
-
-  console.log('[saved-places-store] UID', authStore.uid)
   const colRef = collection(db, `userData/${authStore.uid}/places`)
   const unsubscribe = onSnapshot(colRef, colSnap => {
-    savedPlaces.value = colSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    savedPlaces.value = colSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      ...{
+        geometry: {
+          location: {
+            lat: doc.data()?.geometry?.location?.latitude,
+            lng: doc.data()?.geometry?.location?.longitude
+          }
+        }
+      }
+    }))
   })
 
-  async function append({ place_id, geometry, icon, name, types, tags, notes }) {
+  async function append({ place_id, geometry, icon, name, types, tags, notes, formatted_address }) {
     const toBeSaved = {
       place_id,
+      formatted_address: formatted_address ?? null,
       name,
       types,
       tags,
@@ -28,9 +38,12 @@ export const useSavedPlacesStore = defineStore('savedPlacesStore', () => {
       icon
     }
 
-    console.log('[saved-places-store]', toBeSaved)
     const docRef = doc(colRef, toBeSaved.place_id)
     await setDoc(docRef, toBeSaved)
+  }
+
+  async function findById(id) {
+    return savedPlaces.value.find(place => place.place_id === id)
   }
 
   async function remove(placeId) {
@@ -38,5 +51,5 @@ export const useSavedPlacesStore = defineStore('savedPlacesStore', () => {
     await deleteDoc(docRef)
   }
 
-  return { savedPlaces, append, remove, unsubscribe }
+  return { savedPlaces, append, remove, unsubscribe, findById }
 })

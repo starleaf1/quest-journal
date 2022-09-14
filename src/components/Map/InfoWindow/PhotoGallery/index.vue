@@ -24,9 +24,6 @@ export default {
   },
   data () {
     return ({ active: 0 })
-  },
-  mounted () {
-    console.debug('This place has gallery.', this.images)
   }
 }
 </script>

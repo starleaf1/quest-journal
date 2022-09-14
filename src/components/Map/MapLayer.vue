@@ -26,13 +26,21 @@ import { useSavedPlacesStore } from '@/store/savedPlaces'
 import InfoWindow from "./InfoWindow"
 import MarkerGroup from "./MarkerGroup.vue"
 import { v4 as uuid } from 'uuid'
+import { useComponentCommunicator } from '@/store/componentCommunicator'
 
 export default {
   name: "MapLayer",
   computed: {
-    savedPlaces: {
-      ...mapState(useSavedPlacesStore, ['savedPlaces'])
-    },
+    ...mapState(useSavedPlacesStore, ['savedPlaces']),
+    ...mapState(useComponentCommunicator, ['mapPanOrder'])
+  },
+  watch: {
+    mapPanOrder: {
+      immediate: false,
+      handler(v) {
+        this.handlePanOrder(v)
+      }
+    }
   },
   data() {
     return ({
@@ -45,8 +53,15 @@ export default {
     });
   },
   methods: {
+    handlePanOrder ({ lat, lng, zoom }) {
+      this.$refs.primaryMap.mapObject.setView({ lat, lng }, zoom, {
+        animate: true,
+        duration: 1
+      })
+    },
     handleBoundsChange (e) {
       this.$data.bounds = e
+      this.$emit('update:bounds', e)
     },
     showInfoWindow(place) {
       this.$data.inspectedPlace = place

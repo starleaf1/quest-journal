@@ -40,7 +40,11 @@
                 </template>
               </v-tooltip>
             </template>
-            <InfoInput :place="place" @cancel="saveDialogOpen = false" />
+            <InfoInput
+              :key="place.id"
+              :place="placeData"
+              @cancel="saveDialogOpen = false"
+            />
           </v-dialog>
         </template>
       </v-toolbar>

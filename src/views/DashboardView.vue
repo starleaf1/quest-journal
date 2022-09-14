@@ -4,7 +4,7 @@
       app
       v-model="drawerOpen"
     >
-      <h1 class="text-h4">Hello, World</h1>
+      <PlacesList />
     </v-navigation-drawer>
     <v-main><MapLayer /></v-main>
   </fragment>
@@ -14,6 +14,7 @@
 import MapLayer from '@/components/Map/MapLayer.vue';
 import { useMiscStore } from '@/store';
 import { mapState } from "pinia"
+import PlacesList from '@/components/PlacesList/index.vue';
 // @ is an alias to /src
 
 export default {
@@ -21,6 +22,6 @@ export default {
     computed: {
       ...mapState(useMiscStore, ['drawerOpen'])
     },
-    components: { MapLayer }
+    components: { MapLayer, PlacesList }
 }
 </script>
