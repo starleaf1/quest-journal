@@ -1,7 +1,7 @@
 <template>
   <l-marker
     :latLng="latLng"
-    :icon="icon"
+    :icon="computedIcon"
     @click="handleMarkerClick"
   />
 </template>
@@ -13,7 +13,8 @@ export default {
   props: {
     place: {
       required: true
-    }
+    },
+    icon: Object
   },
   computed: {
     latLng () {
@@ -22,10 +23,10 @@ export default {
         lng: this.place.geometry.location.lng()
       }
     },
-    icon () {
+    computedIcon () {
       return L.icon({
-        iconUrl: this.place.icon,
-        iconSize: [16, 16]
+        iconUrl: this.icon?.url ?? this.place.icon,
+        iconSize: this.icon?.size ?? [16, 16]
       })
     }
   },

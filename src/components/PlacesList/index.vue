@@ -32,7 +32,7 @@
           <v-btn
             icon
             color="primary"
-            @click="orderMapPan({ ...place.geometry.location, zoom: 17 })"
+            @click="handleMapSearchClick(place)"
           >
             <v-icon>mdi-map-search</v-icon>
           </v-btn>
@@ -62,7 +62,12 @@ export default {
     })
   },
   methods: {
-    ...mapActions(useComponentCommunicator, ['orderMapPan']),
+    ...mapActions(useComponentCommunicator, ['orderMapPan', 'markPlace']),
+    handleMapSearchClick (place) {
+      console.debug('[place-list-find-place]', place)
+      this.orderMapPan({ ...place.geometry.location, zoom: 17 })
+      this.markPlace({ ...place.geometry.location })
+    }
   }
 }
 </script>

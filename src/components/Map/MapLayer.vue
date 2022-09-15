@@ -38,7 +38,7 @@ export default {
     mapPanOrder: {
       immediate: false,
       handler(v) {
-        this.handlePanOrder(v)
+        if (v.lat && v.lng) this.handlePanOrder(v)
       }
     }
   },

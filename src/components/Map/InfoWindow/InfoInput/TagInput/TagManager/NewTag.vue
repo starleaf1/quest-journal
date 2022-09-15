@@ -50,7 +50,7 @@ export default {
           await this.edit(this.editId, this.$data.internalName)
         }
         this.$emit('submit')
-        this.$destroy()
+        this.$data.internalName = ''
       } catch (e) {
         this.$emit('error')
         console.error(e)
