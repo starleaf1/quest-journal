@@ -1,5 +1,5 @@
 import { db } from "@/plugins/firebase";
-import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { useAuthStore } from "./authStore";
 
@@ -19,5 +19,9 @@ export const useCategoriesStore = defineStore('categoriesStore', () => {
     await setDoc(docRef, v, { merge: true })
   }
 
-  return { categories, unsubscribe, modify }
+  const add = async v => {
+    await addDoc(colRef, v)
+  }
+
+  return { categories, unsubscribe, add, modify }
 })
