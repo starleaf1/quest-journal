@@ -3,35 +3,29 @@
     <v-form>
       <v-card-title>{{editId ? 'Edit' : 'New'}} Color</v-card-title>
       <v-card-text>
-        <v-color-picker
-          mode="hexa"
-          canvas-height="300"
-          hide-mode-switch
-          hide-inputs
-          v-model="internalColor"
-        />
         <v-text-field
-          v-model="internalName"
+          v-model="internalCategory"
           label="Label"
-        />
-      </v-card-text>
-      <v-card-actions class="align-right">
-        <v-btn
-          type="submit"
-          color="primary"
-          text
         >
-          OK
-        </v-btn>
-      </v-card-actions>
+          <template #prepend>
+            <v-btn
+              type="submit"
+              color="primary"
+              icon
+            >
+              <v-icon>mdi-check</v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
+      </v-card-text>
     </v-form>
   </v-card>
 </template>
 
 <script>
-import { addDoc, collection, doc, setDoc } from '@firebase/firestore'
 import { useAuthStore } from '@/store/authStore'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import { useCategoriesStore } from '@/store/categoriesStore'
 
 export default {
   name: 'ColorEditor',
@@ -49,7 +43,7 @@ export default {
       },
       default: () => ({
         color: '#00000000',
-        name: ''
+        category: ''
       })
     }
   },
@@ -59,21 +53,24 @@ export default {
   data () {
     return {
       internalColor: this.value.color,
-      internalName: ''
+      internalCategory: '',
+      isSubmitting: false
     }
   },
   methods: {
-    handleSubmit() {
+    ...mapActions(useCategoriesStore, ['modify']),
+    async handleSubmit() {
       try {
-        const colRef = collection(this.$firebase.db, `userData/${this.uid}/categories`)
-        const docValues = { color: this.$data.internalColor, name: this.$data.internalName }
+        this.$data.isSubmitting = true
         if (this.editId) {
-          setDoc(doc(colRef, this.editId), docValues)
+          await this.modify(this.editId, { color: this.$data.color, category: this.$data.internalCategory })
         } else {
-          addDoc(colRef, docValues)
+          await this.add({ color: this.$data.color, category: this.$data.internalCategory })
         }
       } catch(e) {
         console.error('[color-editor] Failed to save data', e)
+      } finally {
+        this.$data.isSubmitting = false
       }
       this.$emit('submit')
     }
