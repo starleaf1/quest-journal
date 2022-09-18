@@ -8,14 +8,14 @@ const onUserSignUp = functions.auth.user().onCreate(async (user) => {
   try {
     const myColors = {
       red: colors.red.base,
-      lightRed: colors.red.lighten5,
+      lightRed: colors.red.lighten2,
       green: colors.green.base,
-      lightGreen: colors.green.lighten5,
+      lightGreen: colors.green.lighten2,
       blue: colors.blue.base,
-      lightBlue: colors.blue.lighten5,
+      lightBlue: colors.blue.lighten2,
       yellow: colors.yellow.base,
       orange: colors.orange.base,
-      purple,
+      purple: colors.purple.base,
     };
     await firestore.doc(`userData/${user.uid}`).set({ registered: new Date() });
 
