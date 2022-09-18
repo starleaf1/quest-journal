@@ -24,7 +24,7 @@ export const useSavedPlacesStore = defineStore('savedPlacesStore', () => {
     }))
   })
 
-  async function append({ place_id, geometry, icon, name, types, tags, notes, formatted_address }) {
+  async function append({ place_id, geometry, icon, name, types, tags, notes, formatted_address, category }) {
     const toBeSaved = {
       place_id,
       formatted_address: formatted_address ?? null,
@@ -35,7 +35,8 @@ export const useSavedPlacesStore = defineStore('savedPlacesStore', () => {
       geometry: {
         location: new GeoPoint(geometry.location.lat(), geometry.location.lng())
       },
-      icon
+      icon,
+      category
     }
 
     const docRef = doc(colRef, toBeSaved.place_id)

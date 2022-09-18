@@ -2,6 +2,7 @@ import { db } from "@/plugins/firebase";
 import { addDoc, collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { useAuthStore } from "./authStore";
+import { ref } from "vue";
 
 export const useCategoriesStore = defineStore('categoriesStore', () => {
   const { uid } = useAuthStore()
@@ -11,7 +12,7 @@ export const useCategoriesStore = defineStore('categoriesStore', () => {
   const colRef = collection(db, `userData/${uid}/categories`)
 
   const unsubscribe = onSnapshot(colRef, colSnap => {
-    categories.value = colSnap.docs.map(({ id, data }) => ({ id, ...data() }))
+    categories.value = colSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
   })
 
   const modify = async (id, v) => {

@@ -1,17 +1,18 @@
 <template>
   <v-card>
-    <v-form>
+    <v-form @submit.prevent="handleSubmit">
       <v-card-title>{{editId ? 'Edit' : 'New'}} Color</v-card-title>
       <v-card-text>
         <v-text-field
           v-model="internalCategory"
           label="Label"
         >
-          <template #prepend>
+          <template #append-outer>
             <v-btn
               type="submit"
               color="primary"
               icon
+              :loading="isSubmitting"
             >
               <v-icon>mdi-check</v-icon>
             </v-btn>
@@ -53,7 +54,7 @@ export default {
   data () {
     return {
       internalColor: this.value.color,
-      internalCategory: '',
+      internalCategory: this.value.category,
       isSubmitting: false
     }
   },
@@ -63,10 +64,11 @@ export default {
       try {
         this.$data.isSubmitting = true
         if (this.editId) {
-          await this.modify(this.editId, { color: this.$data.color, category: this.$data.internalCategory })
+          await this.modify(this.editId, { color: this.$data.internalColor, category: this.$data.internalCategory })
         } else {
-          await this.add({ color: this.$data.color, category: this.$data.internalCategory })
+          await this.add({ color: this.$data.internalColor, category: this.$data.internalCategory })
         }
+        this.$emit('close')
       } catch(e) {
         console.error('[color-editor] Failed to save data', e)
       } finally {
