@@ -67,13 +67,13 @@ export default {
           places: this.savedPlaces.filter(place => place.category === category.category)
         }));
         return [
-          ...o.filter(i => i.places.length > 0),
+          ...o,
           {
             name: "Uncategorized",
             places: this.savedPlaces.filter(place => (!place.category ||
               !place.category.length))
           }
-        ];
+        ].filter(i => i.places.length > 0);
       },
       displayedPlaces() {
         return this.savedPlaces.filter(() => true);
