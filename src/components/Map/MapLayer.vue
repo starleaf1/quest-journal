@@ -13,10 +13,11 @@
       @click:marker="showInfoWindow"
     />
     <InfoWindow
-      :place="inspectedPlace"
-      :open="infoWindowOpen"
-      @click:outside="hideInfoWindow"
+    :place="inspectedPlace"
+    :open="infoWindowOpen"
+    @click:outside="hideInfoWindow"
     />
+    <SavedPlacesLayer />
   </l-map>
 </template>
 
@@ -27,6 +28,7 @@ import InfoWindow from "./InfoWindow"
 import MarkerGroup from "./MarkerGroup.vue"
 import { v4 as uuid } from 'uuid'
 import { useComponentCommunicator } from '@/store/componentCommunicator'
+import SavedPlacesLayer from './SavedPlacesLayer/index.vue'
 
 export default {
   name: "MapLayer",
@@ -94,6 +96,6 @@ export default {
       this.$refs.primaryMap.mapObject.invalidateSize();
     });
   },
-  components: { InfoWindow, MarkerGroup }
+  components: { InfoWindow, MarkerGroup, SavedPlacesLayer }
 }
 </script>

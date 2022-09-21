@@ -1,20 +1,29 @@
 <template>
-  <l-layer-group></l-layer-group>
+  <fragment>
+    <ColorGroup
+      v-for="color in categories"
+      :key="color.id"
+      :color="color.category"
+    />
+  </fragment>
 </template>
 
 <script>
-import { mapState } from 'pinia'
-import { useSavedPlacesStore } from '@/store/savedPlaces'
+import { mapActions, mapState } from 'pinia'
+import { useCategoriesStore } from '@/store/categoriesStore';
+import ColorGroup from './ColorGroup.vue';
 
 export default {
-  name: 'SavedPlacesMarker',
+  name: "SavedPlacesMarker",
   computed: {
-    ...mapState(useSavedPlacesStore, ['savedPlaces'])
+    ...mapState(useCategoriesStore, ["categories"])
   },
   methods: {
-    handleMarkerClick () {
-      
-    }
-  }
+    handleMarkerClick(e) {
+      this.$emit('click:marker', e)
+    },
+    ...mapActions(useCategoriesStore, ['findAllMembers'])
+  },
+  components: { ColorGroup },
 }
 </script>
