@@ -5,6 +5,7 @@
       :key="place.id"
       :color="color"
       :place="place"
+      @click="handleClickMarker"
     />
   </l-layer-group>
 </template>
@@ -36,6 +37,9 @@ export default {
     ...mapActions(useCategoriesStore, ['findAllMembers']),
     repopulatePlaces () {
       this.$data.places = this.findAllMembers(this.color)
+    },
+    handleClickMarker(e) {
+      this.$emit('click:marker', e)
     }
   },
   mounted () {

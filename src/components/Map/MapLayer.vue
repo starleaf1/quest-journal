@@ -13,11 +13,11 @@
       @click:marker="showInfoWindow"
     />
     <InfoWindow
-    :place="inspectedPlace"
-    :open="infoWindowOpen"
-    @click:outside="hideInfoWindow"
+      :place="inspectedPlace"
+      :open="infoWindowOpen"
+      @click:outside="hideInfoWindow"
     />
-    <SavedPlacesLayer />
+    <SavedPlacesLayer @click:marker="showInfoWindow" />
   </l-map>
 </template>
 

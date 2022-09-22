@@ -4,6 +4,7 @@
       v-for="color in categories"
       :key="color.id"
       :color="color.category"
+      @click:marker="handleMarkerClick"
     />
   </fragment>
 </template>

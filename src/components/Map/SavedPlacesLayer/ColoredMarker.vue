@@ -2,6 +2,7 @@
   <l-marker
     :lat-lng="latLng"
     :icon="icon"
+    @click="handleClick"
   />
 </template>
 
