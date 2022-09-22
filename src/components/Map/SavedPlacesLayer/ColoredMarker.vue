@@ -21,8 +21,8 @@ export default {
     icon () {
       return L.icon({
         iconUrl: require(`@/assets/markers/${this.color}.svg`),
-        iconSize: [24, 24],
-        iconAnchor: [12, 24]
+        iconSize: [36, 36],
+        iconAnchor: [18, 36]
       })
     }
   },

@@ -80,7 +80,11 @@ export default {
         console.debug('[marker-group] Getting place list')
         const places = await getPlacesInBounds(e);
         console.debug('[marker-group] Fetch complete', places)
-        appendPlaces(places)
+        appendPlaces(places.filter(place => {
+          return !place.types?.every(type => {
+            return ['political', 'locality'].includes(type)
+          })
+        }))
       }
       return _.debounce(fetchPlaces, 1000, { leading: true, trailing: false })()
     }
