@@ -6,6 +6,10 @@
       :color="color.category"
       @click:marker="handleMarkerClick"
     />
+    <ColorGroup
+      :color="null"
+      @click:marker="handleMarkerClick"
+    />
   </fragment>
 </template>
 

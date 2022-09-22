@@ -3,7 +3,7 @@
     <ColoredMarker
       v-for="place in places"
       :key="place.id"
-      :color="color"
+      :color="color ?? 'black'"
       :place="place"
       @click="handleClickMarker"
     />
@@ -43,7 +43,6 @@ export default {
     }
   },
   mounted () {
-    console.log('[color-grouping] First mounted. Populating...')
     this.repopulatePlaces()
   },
   watch: {
