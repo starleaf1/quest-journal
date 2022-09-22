@@ -29,7 +29,7 @@ export const getPlaceDetails = (
     });
   });
 
-export const getPlacesInBounds = (bounds) =>
+export const getPlacesInBounds = (bounds, keywords) =>
   new Promise((resolve, reject) => {
     const googleFormattedBounds = new google.maps.LatLngBounds(
       bounds._southWest,
@@ -44,7 +44,11 @@ export const getPlacesInBounds = (bounds) =>
     const radius = origin.distanceTo(destination) * 1000;
 
     service.nearbySearch(
-      { location: searchCenter, radius },
+      {
+        location: searchCenter,
+        radius,
+        ...(keywords ? { keywords } : null),
+      },
       (results, status) => {
         if (status !== google.maps.places.PlacesServiceStatus.OK)
           reject(status);
