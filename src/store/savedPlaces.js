@@ -51,8 +51,8 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
       notes,
       geometry: {
         location: new GeoPoint(
-          geometry.location.lat(),
-          geometry.location.lng()
+          typeof geometry.location.lat === 'function' ? geometry.location.lat() : geometry.location.lat,
+          typeof geometry.location.lng === 'function' ? geometry.location.lng() : geometry.location.lng
         ),
       },
       icon: icon ?? null,
