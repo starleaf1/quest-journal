@@ -56,3 +56,28 @@ export const getPlacesInBounds = (bounds, keywords) =>
       }
     );
   });
+
+export const searchByText = (bounds, keywords) => new Promise((resolve, reject) => {
+  const googleFormattedBounds = new google.maps.LatLngBounds(
+    bounds._southWest,
+    bounds._northEast
+  );
+  const searchCenter = googleFormattedBounds.getCenter();
+  const edge = googleFormattedBounds.getNorthEast();
+
+  const origin = new GeoPoint(searchCenter.lat(), searchCenter.lng());
+  const destination = new GeoPoint(edge.lat(), edge.lng());
+
+  const radius = origin.distanceTo(destination) * 1000;
+
+  const request = {
+    location: searchCenter,
+    radius,
+    query: keywords
+  }
+
+  service.textSearch(request, (results, status) => {
+    if (status !== google.maps.places.PlacesServiceStatus.OK) reject(status)
+    resolve(results)
+  })
+})

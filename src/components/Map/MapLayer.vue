@@ -11,6 +11,13 @@
     <MarkerGroup
       :bounds="bounds"
       @click:marker="showInfoWindow"
+      v-if="!currentKeyword?.length"
+    />
+    <SearchResultsLayer @click:marker="showInfoWindow" v-else />
+    <PrimaryCoordinates
+      v-if="markedPlaceInfo.place_id"
+      :place="markedPlaceInfo"
+      @click:marker="showInfoWindow"
     />
     <InfoWindow
       :place="inspectedPlace"
@@ -22,19 +29,24 @@
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import { useSavedPlacesStore } from '@/store/savedPlaces'
 import InfoWindow from "./InfoWindow"
 import MarkerGroup from "./MarkerGroup.vue"
+import SearchResultsLayer from "./SearchResultsLayer.vue"
 import { v4 as uuid } from 'uuid'
 import { useComponentCommunicator } from '@/store/componentCommunicator'
 import SavedPlacesLayer from './SavedPlacesLayer/index.vue'
+import PrimaryCoordinates from "./PrimaryCoordinates"
+import { useMapStateStore } from '@/store/mapState'
+import { useSearchResultStore } from '@/store/searchResult'
 
 export default {
   name: "MapLayer",
   computed: {
     ...mapState(useSavedPlacesStore, ['savedPlaces']),
-    ...mapState(useComponentCommunicator, ['mapPanOrder'])
+    ...mapState(useComponentCommunicator, ['mapPanOrder', 'markedPlaceInfo']),
+    ...mapState(useSearchResultStore, ['currentKeyword'])
   },
   watch: {
     mapPanOrder: {
@@ -55,6 +67,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions(useMapStateStore, ['setBounds']),
     handlePanOrder ({ lat, lng, zoom }) {
       this.$refs.primaryMap.mapObject.setView({ lat, lng }, zoom, {
         animate: true,
@@ -63,6 +76,7 @@ export default {
     },
     handleBoundsChange (e) {
       this.$data.bounds = e
+      this.setBounds(e)
       this.$emit('update:bounds', e)
     },
     showInfoWindow(place) {
@@ -96,6 +110,6 @@ export default {
       this.$refs.primaryMap.mapObject.invalidateSize();
     });
   },
-  components: { InfoWindow, MarkerGroup, SavedPlacesLayer }
+  components: { InfoWindow, MarkerGroup, SavedPlacesLayer, SearchResultsLayer, PrimaryCoordinates }
 }
 </script>

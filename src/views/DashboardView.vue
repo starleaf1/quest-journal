@@ -18,10 +18,10 @@ import PlacesList from '@/components/PlacesList/index.vue';
 // @ is an alias to /src
 
 export default {
-    name: "DashboardView",
-    computed: {
-      ...mapState(useMiscStore, ['drawerOpen'])
-    },
-    components: { MapLayer, PlacesList }
+  name: "DashboardView",
+  computed: {
+    ...mapState(useMiscStore, ['drawerOpen'])
+  },
+  components: { MapLayer, PlacesList }
 }
 </script>

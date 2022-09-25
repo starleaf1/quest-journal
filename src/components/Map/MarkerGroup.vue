@@ -1,10 +1,6 @@
 <template>
   <l-layer-group>
     <BaseMarkers :places="places" @click:marker="handleMarkerClick" />
-    <l-marker
-      v-if="placeMarkerCoordinates.lat && placeMarkerCoordinates.lng"
-      :latLng="placeMarkerCoordinates"
-    />
   </l-layer-group>
 </template>
 
@@ -28,7 +24,7 @@ export default {
   },
   computed: {
     ...mapState(useAuthStore, ['uid']),
-    ...mapState(useComponentCommunicator, ['placeMarkerCoordinates'])
+    ...mapState(useComponentCommunicator, ['markedPlaceInfo'])
   },
   data () {
     return ({

@@ -33,7 +33,7 @@ export default {
     ...mapActions(useComponentCommunicator, ['orderMapPan', 'markPlace']),
     handleMapSearchClick (place) {
       this.orderMapPan({ ...place.geometry.location, zoom: 17 })
-      this.markPlace({ ...place.geometry.location })
+      this.markPlace({ ...place })
     }
   }
 }
