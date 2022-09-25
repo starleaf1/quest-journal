@@ -26,7 +26,7 @@ export default {
     computedIcon () {
       return L.icon({
         iconUrl: this.icon?.url ?? this.place.icon,
-        iconSize: this.icon?.size ?? [10, 10]
+        iconSize: this.icon?.size ?? [12, 12]
       })
     }
   },
