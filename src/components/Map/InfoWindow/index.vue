@@ -9,31 +9,18 @@
         <v-btn icon @click="handleCloseDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <h5 class="text-h6 pb-0">{{place?.name}}</h5>
-        <template #extension>
-          <v-chip-group class="pt-0 ma-0">
-            <v-chip
-              v-for="tag in placeTags ?? []"
-              :key="tag"
-              class="mr-1 my-0"
-              outlined
-              x-small
-              v-text="tag"
-            />
-          </v-chip-group>
+        <v-toolbar-title class="text-h6 pb-0">{{place?.name}}</v-toolbar-title>
+        <v-spacer />
+        <v-toolbar-items>
           <v-dialog :fullscreen="!isOnPC" v-model="saveDialogOpen">
             <template #activator="{ on: dialog }">
               <v-tooltip bottom>
                 <span>Add to collection</span>
                 <template #activator="{ on: tooltip }">
                   <v-btn
-                    fab
+                    icon
                     v-on="{ ...tooltip, ...dialog }"
-                    color="accent"
                     :small="!isOnPC"
-                    right
-                    bottom
-                    absolute
                   >
                     <v-icon>mdi-pin</v-icon>
                   </v-btn>
@@ -46,6 +33,24 @@
               @cancel="saveDialogOpen = false"
             />
           </v-dialog>
+          <v-btn
+            icon
+            :href="placeData.url"
+          >
+            <v-icon>mdi-google-maps</v-icon>
+          </v-btn>
+        </v-toolbar-items>
+        <template #extension>
+          <v-chip-group class="pt-0 ma-0">
+            <v-chip
+              v-for="tag in placeTags ?? []"
+              :key="tag"
+              class="mr-1 my-0"
+              outlined
+              x-small
+              v-text="tag"
+            />
+          </v-chip-group>
         </template>
       </v-toolbar>
       <v-container class="fill-height" v-if="loading">
