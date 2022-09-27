@@ -14,8 +14,10 @@ export const getPlaceDetails = (
     "business_status",
     "formatted_phone_number",
     "opening_hours",
+    "photo",
     "utc_offset_minutes",
     "type",
+    "url"
   ]
 ) =>
   new Promise((resolve, reject) => {
