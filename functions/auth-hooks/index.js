@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const { getFirestore } = require("firebase-admin/firestore");
 const colors = require("../libs/colors");
-const { purple } = require("../libs/colors");
 
 const firestore = getFirestore();
 const onUserSignUp = functions.auth.user().onCreate(async (user) => {
