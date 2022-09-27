@@ -4,10 +4,10 @@
       app
       color="primary"
       dark
-      class="align-bottom"
+      class="align-center justify-center"
     >
       <v-app-bar-nav-icon @click="handleNavButtonClick"></v-app-bar-nav-icon>
-      <h1 class="text-h5">Quest Journal</h1>
+      <v-app-bar-title>AmborJo Quest</v-app-bar-title>
       <v-spacer />
       <SearchBox />
       <v-spacer />

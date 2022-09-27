@@ -17,7 +17,14 @@
         @input="handleInput"
         @click:clear="clearSearch"
         clearable
-      />
+        dense
+        outlined
+        :hide-details="true"
+      >
+        <template #append>
+          <v-icon>mdi-magnify</v-icon>
+        </template>
+      </v-text-field>
     </template>
     <ResultList />
   </v-menu>
