@@ -28,7 +28,7 @@
               </v-tooltip>
             </template>
             <InfoInput
-              :key="place.id"
+              :key="place?.place_id ?? place?.id"
               :place="placeData"
               @cancel="saveDialogOpen = false"
             />
@@ -66,7 +66,8 @@
           :opening-hours="placeData?.opening_hours"
           :business-status="placeData?.business_status"
         />
-        <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" />
+        <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="py-6" />
+        <v-textarea v-model="noteValue" outlined label="My notes" />
       </v-card-text>
     </v-sheet>
   </v-dialog>
@@ -74,10 +75,11 @@
 
 <script>
 import { usePlaceDetailsStore } from '@/store/placeDetails'
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
 import InfoInput from './InfoInput/index.vue';
+import { useSavedPlacesStore } from '@/store/savedPlaces';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -99,19 +101,33 @@ export default {
     placeData() {
       return {
         ...this.place,
-        ...this.$data.placeDetails
+        ...this.$data.placeDetails,
+        ...this.extraSavedData
       };
+    },
+    ...mapState(useSavedPlacesStore, ['savedPlaces']),
+    extraSavedData () {
+      return this.savedPlaces.find(place => place?.place_id === this.place?.place_id)
     }
   },
   data() {
     return ({
       saveDialogOpen: false,
       placeDetails: {},
-      loading: false
+      loading: false,
+      noteValue: '',
+      tagsValue: [],
+      categoryValue: null
     });
   },
   methods: {
     ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
+
+    populateInputs () {
+      this.$data.noteValue = this.placeData?.notes ?? ''
+      this.$data.tagsValue = this.placeData?.tags ?? []
+      this.$data.categoryValue = this.placeData?.category
+    },
 
     handleCloseDialog() {
       this.$emit("click:outside");
@@ -133,6 +149,9 @@ export default {
   watch: {
     place(v) {
       this.getPlaceDetails(v?.place_id);
+    },
+    placeData () {
+      this.populateInputs()
     }
   },
   components: { OpeningHours, PhotoGallery, InfoInput }
