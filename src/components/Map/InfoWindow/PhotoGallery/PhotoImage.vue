@@ -1,5 +1,5 @@
 <template>
-  <v-img :class="{ 'elevation-2': active }" :src="src" height="300" max-width="300" />
+  <v-img class="ma-2" :class="{ 'elevation-2': active }" :src="src" height="300" max-width="300" />
 </template>
 
 <script>

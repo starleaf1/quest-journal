@@ -19,7 +19,7 @@ import { useCategoriesStore } from '@/store/categoriesStore';
 import ColorGroup from './ColorGroup.vue';
 
 export default {
-  name: "SavedPlacesMarker",
+  name: "SavedPlacesMarkers",
   computed: {
     ...mapState(useCategoriesStore, ["categories"])
   },

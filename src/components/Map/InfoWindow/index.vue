@@ -4,7 +4,7 @@
     :value="open"
     @click:outside="handleCloseDialog"
   >
-    <v-sheet height="100%" width="100%">
+    <v-sheet min-height="100vh" width="100%">
       <v-toolbar dense color="primary" dark>
         <v-btn icon @click="handleCloseDialog">
           <v-icon>mdi-close</v-icon>
@@ -12,32 +12,27 @@
         <v-toolbar-title class="text-h6 pb-0">{{place?.name}}</v-toolbar-title>
         <v-spacer />
         <v-toolbar-items>
-          <v-dialog :fullscreen="!isOnPC" v-model="saveDialogOpen">
-            <template #activator="{ on: dialog }">
-              <v-tooltip bottom>
-                <span>Add to collection</span>
-                <template #activator="{ on: tooltip }">
-                  <v-btn
-                    icon
-                    v-on="{ ...tooltip, ...dialog }"
-                    :small="!isOnPC"
-                  >
-                    <v-icon>mdi-pin</v-icon>
-                  </v-btn>
-                </template>
-              </v-tooltip>
+          <v-tooltip bottom>
+            <span>Add to collection</span>
+            <template #activator="{ on: tooltip }">
+              <v-btn
+                v-on="{ ...tooltip }"
+                :small="!isOnPC"
+                text
+                :loading="isSubmitting"
+                @click="savePlace"
+              >
+                Save
+              </v-btn>
             </template>
-            <InfoInput
-              :key="place?.place_id ?? place?.id"
-              :place="placeData"
-              @cancel="saveDialogOpen = false"
-            />
-          </v-dialog>
+          </v-tooltip>
           <v-btn
-            icon
+            text
             :href="placeData.url"
+            target="_blank"
           >
-            <v-icon>mdi-google-maps</v-icon>
+            Open in Google Maps
+            <v-icon right>mdi-launch</v-icon>
           </v-btn>
         </v-toolbar-items>
         <template #extension>
@@ -62,12 +57,18 @@
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
         <OpeningHours
+          class="mb-2"
           v-if="placeData?.opening_hours"
           :opening-hours="placeData?.opening_hours"
           :business-status="placeData?.business_status"
         />
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="py-6" />
-        <v-textarea v-model="noteValue" outlined label="My notes" />
+        <v-textarea :disabled="isSubmitting" class="mt-2" v-model="noteValue" outlined label="My notes" />
+        <div class="d-flex align-center">
+          <TagInput :disabled="isSubmitting" v-model="tagsValue" />
+          <v-spacer />
+          <ColorInput :disabled="isSubmitting" v-model="categoryValue" />
+        </div>
       </v-card-text>
     </v-sheet>
   </v-dialog>
@@ -78,8 +79,9 @@ import { usePlaceDetailsStore } from '@/store/placeDetails'
 import { mapActions, mapState } from 'pinia';
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
-import InfoInput from './InfoInput/index.vue';
 import { useSavedPlacesStore } from '@/store/savedPlaces';
+import TagInput from './InfoInput/TagInput/index.vue';
+import ColorInput from './ColorGrouping/ColorInput.vue';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -115,6 +117,7 @@ export default {
       saveDialogOpen: false,
       placeDetails: {},
       loading: false,
+      isSubmitting: false,
       noteValue: '',
       tagsValue: [],
       categoryValue: null
@@ -122,6 +125,7 @@ export default {
   },
   methods: {
     ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
+    ...mapActions(useSavedPlacesStore, ['append']),
 
     populateInputs () {
       this.$data.noteValue = this.placeData?.notes ?? ''
@@ -133,7 +137,6 @@ export default {
       this.$emit("click:outside");
     },
     async getPlaceDetails(placeId) {
-      console.log('[info-window] Displaying details for place', placeId)
       try {
         this.$data.loading = true;
         this.$data.placeDetails = await this.getDetailsById(placeId);
@@ -143,6 +146,21 @@ export default {
       }
       finally {
         this.$data.loading = false;
+      }
+    },
+    async savePlace () {
+      try {
+        this.$data.isSubmitting = true
+        await this.append({
+          ...this.placeData,
+          notes: this.$data.noteValue,
+          tags: this.$data.tagsValue,
+          category: this.$data.categoryValue
+        })
+      } catch (e) {
+        console.error(e)
+      } finally {
+        this.$data.isSubmitting = false
       }
     }
   },
@@ -154,6 +172,6 @@ export default {
       this.populateInputs()
     }
   },
-  components: { OpeningHours, PhotoGallery, InfoInput }
+  components: { OpeningHours, PhotoGallery, TagInput, ColorInput }
 }
 </script>

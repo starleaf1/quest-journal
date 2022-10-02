@@ -56,7 +56,7 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
         ),
       },
       icon: icon ?? null,
-      category,
+      ...(category ? { category } : null),
     };
 
     console.debug("[saved-places-store] Attempting to save", toBeSaved);
