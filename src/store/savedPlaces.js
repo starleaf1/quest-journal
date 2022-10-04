@@ -51,12 +51,16 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
       notes,
       geometry: {
         location: new GeoPoint(
-          typeof geometry.location.lat === 'function' ? geometry.location.lat() : geometry.location.lat,
-          typeof geometry.location.lng === 'function' ? geometry.location.lng() : geometry.location.lng
+          typeof geometry.location.lat === "function"
+            ? geometry.location.lat()
+            : geometry.location.lat,
+          typeof geometry.location.lng === "function"
+            ? geometry.location.lng()
+            : geometry.location.lng
         ),
       },
       icon: icon ?? null,
-      ...(category ? { category } : null),
+      category: category ?? null,
     };
 
     console.debug("[saved-places-store] Attempting to save", toBeSaved);
