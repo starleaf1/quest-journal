@@ -69,6 +69,26 @@
           <ColorInput class="ml-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
       </v-card-text>
+      <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
+        <v-dialog>
+          <template #activator="{ on: dialog }">
+            <v-btn v-on="dialog" color="error">
+              <v-icon left>mdi-delete</v-icon>
+              <span>Delete</span>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>Delete place</v-card-title>
+            <v-card-text>
+              Do you want to remove this place from your saved places list?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn @click="handleDeleteButtonClick" text color="error">Delete</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
     </v-sheet>
   </v-dialog>
 </template>
@@ -109,6 +129,9 @@ export default {
     ...mapState(useSavedPlacesStore, ['savedPlaces']),
     extraSavedData () {
       return this.savedPlaces.find(place => place?.place_id === this.place?.place_id)
+    },
+    isPlaceSaved () {
+      return !!this.extraSavedData
     }
   },
   data() {
@@ -124,7 +147,7 @@ export default {
   },
   methods: {
     ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
-    ...mapActions(useSavedPlacesStore, ['append']),
+    ...mapActions(useSavedPlacesStore, ['append', 'remove']),
 
     populateInputs () {
       this.$data.noteValue = this.placeData?.notes ?? ''
@@ -160,6 +183,13 @@ export default {
         console.error(e)
       } finally {
         this.$data.isSubmitting = false
+      }
+    },
+    async handleDeleteButtonClick () {
+      try {
+        await this.remove(this.placeData.place_id)
+      } catch (e) {
+        console.error('[delete-button-click]', e)
       }
     }
   },
