@@ -40,13 +40,15 @@ import SavedPlacesLayer from './SavedPlacesLayer/index.vue'
 import PrimaryCoordinates from "./PrimaryCoordinates"
 import { useMapStateStore } from '@/store/mapState'
 import { useSearchResultStore } from '@/store/searchResult'
+import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore'
 
 export default {
   name: "MapLayer",
   computed: {
     ...mapState(useSavedPlacesStore, ['savedPlaces']),
     ...mapState(useComponentCommunicator, ['mapPanOrder', 'markedPlaceInfo']),
-    ...mapState(useSearchResultStore, ['currentKeyword'])
+    ...mapState(useSearchResultStore, ['currentKeyword']),
+    ...mapState(usePlaceDetailWindowStateStore, ['inspectedPlace', 'infoWindowOpen'])
   },
   watch: {
     mapPanOrder: {
@@ -61,13 +63,14 @@ export default {
       tileUrl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       center: [-8.4537137, 114.5110415],
       places: [],
-      inspectedPlace: null,
-      infoWindowOpen: false,
+      // inspectedPlace: null,
+      // infoWindowOpen: false,
       bounds: null
     });
   },
   methods: {
     ...mapActions(useMapStateStore, ['setBounds']),
+    ...mapActions(usePlaceDetailWindowStateStore, ['showInfoWindow', 'hideInfoWindow']),
     handlePanOrder ({ lat, lng, zoom }) {
       this.$refs.primaryMap.mapObject.setView({ lat, lng }, zoom, {
         animate: true,
@@ -79,10 +82,10 @@ export default {
       this.setBounds(e)
       this.$emit('update:bounds', e)
     },
-    showInfoWindow(place) {
-      this.$data.inspectedPlace = place
-      this.$data.infoWindowOpen = true
-    },
+    // showInfoWindow(place) {
+    //   this.$data.inspectedPlace = place
+    //   this.$data.infoWindowOpen = true
+    // },
     handleContextClick(e) {
       const { latlng: location } = e
       const name = `${Math.abs(location.lat)}${location.lat >= 0 ? 'N' : 'S'}, ${Math.abs(location.lng)}${location.lng >= 0 ? 'E' : 'W'}`
@@ -99,11 +102,11 @@ export default {
         },
         name
       })
-    },
-    hideInfoWindow() {
-      this.$data.inspectedPlace = null
-      this.$data.infoWindowOpen = false
-    },
+    }
+    // hideInfoWindow() {
+    //   this.$data.inspectedPlace = null
+    //   this.$data.infoWindowOpen = false
+    // },
   },
   mounted() {
     this.$nextTick().then(() => {
