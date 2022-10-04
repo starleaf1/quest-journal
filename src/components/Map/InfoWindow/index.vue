@@ -65,9 +65,8 @@
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="py-6" />
         <v-textarea :disabled="isSubmitting" class="mt-2" v-model="noteValue" outlined label="My notes" />
         <div class="d-flex align-center">
-          <TagInput :disabled="isSubmitting" v-model="tagsValue" />
-          <v-spacer />
-          <ColorInput :disabled="isSubmitting" v-model="categoryValue" />
+          <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
+          <ColorInput class="ml-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
       </v-card-text>
     </v-sheet>
