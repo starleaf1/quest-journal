@@ -26,7 +26,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(useSavedPlacesStore, ['savedPlaces'])
+    ...mapState(useSavedPlacesStore, ['savedPlaces']),
+    ...mapState(useCategoriesStore, ['categories'])
   },
   data () {
     return {
@@ -36,7 +37,8 @@ export default {
   methods: {
     ...mapActions(useCategoriesStore, ['findAllMembers']),
     repopulatePlaces () {
-      this.$data.places = this.findAllMembers(this.color)
+      const categoryName = this.categories.find(category => category.id === this.color)?.category
+      this.$data.places = this.findAllMembers(categoryName)
     },
     handleClickMarker(e) {
       this.$emit('click:marker', e)

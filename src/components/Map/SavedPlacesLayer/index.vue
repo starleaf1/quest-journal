@@ -3,7 +3,7 @@
     <ColorGroup
       v-for="color in categories"
       :key="color.id"
-      :color="color.category"
+      :color="color.id"
       @click:marker="handleMarkerClick"
     />
     <ColorGroup
