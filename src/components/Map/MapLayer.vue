@@ -97,10 +97,6 @@ export default {
         name
       })
     }
-    // hideInfoWindow() {
-    //   this.$data.inspectedPlace = null
-    //   this.$data.infoWindowOpen = false
-    // },
   },
   mounted() {
     this.$nextTick().then(() => {
