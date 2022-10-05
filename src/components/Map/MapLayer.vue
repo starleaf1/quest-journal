@@ -63,8 +63,6 @@ export default {
       tileUrl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       center: [-8.4537137, 114.5110415],
       places: [],
-      // inspectedPlace: null,
-      // infoWindowOpen: false,
       bounds: null
     });
   },
@@ -82,10 +80,6 @@ export default {
       this.setBounds(e)
       this.$emit('update:bounds', e)
     },
-    // showInfoWindow(place) {
-    //   this.$data.inspectedPlace = place
-    //   this.$data.infoWindowOpen = true
-    // },
     handleContextClick(e) {
       const { latlng: location } = e
       const name = `${Math.abs(location.lat)}${location.lat >= 0 ? 'N' : 'S'}, ${Math.abs(location.lng)}${location.lng >= 0 ? 'E' : 'W'}`
