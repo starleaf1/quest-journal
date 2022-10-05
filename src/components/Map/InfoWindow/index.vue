@@ -101,6 +101,7 @@ import PhotoGallery from './PhotoGallery/index.vue';
 import { useSavedPlacesStore } from '@/store/savedPlaces';
 import TagInput from './InfoInput/TagInput/index.vue';
 import ColorInput from './ColorGrouping/ColorInput.vue';
+import { useCategoriesStore } from '@/store/categoriesStore';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -113,6 +114,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(useSavedPlacesStore, ['savedPlaces']),
+    ...mapState(useCategoriesStore, ['categories']),
     placeTags() {
       return this.placeData.types?.map?.(type => {
         const spaced = type.replace(/_/g, " ");
@@ -126,7 +129,6 @@ export default {
         ...this.extraSavedData
       };
     },
-    ...mapState(useSavedPlacesStore, ['savedPlaces']),
     extraSavedData () {
       return this.savedPlaces.find(place => place?.place_id === this.place?.place_id)
     },
@@ -152,7 +154,7 @@ export default {
     populateInputs () {
       this.$data.noteValue = this.placeData?.notes ?? ''
       this.$data.tagsValue = this.placeData?.tags ?? []
-      this.$data.categoryValue = this.placeData?.category
+      this.$data.categoryValue = this.categories.find(category => this.placeData?.category === category.category)
     },
 
     handleCloseDialog() {

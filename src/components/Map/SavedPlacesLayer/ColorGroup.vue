@@ -21,7 +21,6 @@ export default {
   components: { ColoredMarker },
   props: {
     color: {
-      required: true,
       type: String
     }
   },
