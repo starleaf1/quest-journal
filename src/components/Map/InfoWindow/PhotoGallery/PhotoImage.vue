@@ -1,5 +1,13 @@
 <template>
-  <v-img class="ma-2" :class="{ 'elevation-2': active }" :src="src" height="300" max-width="300" />
+  <v-img
+    class="ma-2 align-end justify-center"
+    :class="{ 'elevation-4': active }"
+    :src="src"
+    height="300"
+    max-width="300"
+    v-on="$listeners"
+  >
+  </v-img>
 </template>
 
 <script>

@@ -1,9 +1,18 @@
 <template>
   <v-slide-group
     :show-arrows="true"
+    v-model="activePhoto"
   >
-    <v-slide-item :active="active" v-for="(image, n) in images" :key="n" #default="{ active }">
-      <PhotoImage :image="image" :active="active" />
+    <v-slide-item
+      v-for="(image, n) in images"
+      :key="n"
+      v-slot="{ active, toggle }"
+    >
+      <PhotoImage
+        :image="image"
+        :active="active"
+        @click="toggle"
+      />
     </v-slide-item>
   </v-slide-group>
 </template>
@@ -23,7 +32,7 @@ export default {
     }
   },
   data () {
-    return ({ active: 0 })
+    return ({ activePhoto: 0 })
   }
 }
 </script>
