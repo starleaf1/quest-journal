@@ -62,7 +62,7 @@
           :opening-hours="placeData?.opening_hours"
           :business-status="placeData?.business_status"
         />
-        <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="py-6" />
+        <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="my-6" />
         <v-textarea :disabled="isSubmitting" class="mt-2" v-model="noteValue" outlined label="My notes" />
         <div class="d-flex align-center">
           <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
