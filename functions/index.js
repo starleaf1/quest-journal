@@ -1,10 +1,12 @@
 require('./init')
 const authHooks = require('./auth-hooks')
 const firestoreHooks = require('./firestore-hooks')
+const storageHooks = require('./storage-hooks')
 
 module.exports = {
     ...authHooks,
-    ...firestoreHooks
+    ...firestoreHooks,
+    ...storageHooks
 }
 
 // // Create and Deploy Your First Cloud Functions
