@@ -48,6 +48,9 @@ import PhotoUploader from "@/components/common/PhotoUploader"
 import { mapState } from 'pinia';
 import { useAuthStore } from '@/store/authStore';
 import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore';
+import { collection, onSnapshot } from '@firebase/firestore';
+import { db, storage } from '@/plugins/firebase';
+import { getDownloadURL, ref } from '@firebase/storage';
 
 export default {
   name: 'PhotoGallery',
@@ -60,6 +63,12 @@ export default {
     ...mapState(usePlaceDetailWindowStateStore, ['inspectedPlace']),
     storageDirectory () {
       return `uploads/${this.uid}/images/places/${this.inspectedPlace.place_id}`
+    },
+    fullCollection () {
+      return [
+        ...this.$data.uploadedPhotos,
+        ...this.images
+      ]
     }
   },
   props: {
@@ -71,8 +80,36 @@ export default {
   data () {
     return ({
       activePhoto: 0,
-      isUploaderDialogOpen: false
+      isUploaderDialogOpen: false,
+      uploadedPhotos: [],
+      unsubscribe: () => {}
     })
+  },
+  methods: {
+    async putFirestoreListener () {
+      const photosColRef = collection(db, `userData/${this.uid}/places/${this.inspectedPlace.place_id}/images`)
+      this.$data.unsubscribe = onSnapshot(photosColRef, async snapshot => {
+        this.$data.uploadedPhotos = await Promise.all(
+          snapshot.docs.map(doc => {
+            const photoGcsRef = ref(storage, doc.data().gcsUrl)
+            console.log('[get-uploaded-photos]', photoGcsRef)
+            return getDownloadURL(photoGcsRef)
+          })
+        )
+      })
+    }
+  },
+  mounted () {
+    this.putFirestoreListener()
+  },
+  beforeUpdate () {
+    this.$data.unsubscribe()
+  },
+  updated () {
+    this.putFirestoreListener()
+  },
+  beforeDestroy () {
+    this.$data.unsubscribe()
   }
 }
 </script>
