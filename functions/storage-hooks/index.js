@@ -1,6 +1,5 @@
-const { getFirestore } = require('firebase-admin')
+const { getFirestore } = require('firebase-admin/firestore')
 const functions = require('firebase-functions')
-const { serverTimestamp } = require('firebase/firestore')
 
 const registerPhotoInFirestore = functions.storage.object().onFinalize(async object => {
   if (!object.name.match(/^uploads\/.*\/images\/places\/.*/)) return
@@ -9,14 +8,10 @@ const registerPhotoInFirestore = functions.storage.object().onFinalize(async obj
   const [, uid, , , placeId, ] = name.split('/')
 
   const firestore = getFirestore()
-  try {
-    await firestore.doc(`userData/${uid}/places/${placeId}/images`).set({
-      uploaded: serverTimestamp(),
-      gcsPath: name
-    })
-  } catch (e) {
-    console.error('Failed to register in Firestore')
-  }
+  await firestore.collection(`userData/${uid}/places/${placeId}/images`).add({
+    uploaded: new Date(),
+    gcsPath: name
+  })
 })
 
 module.exports = { registerPhotoInFirestore }
