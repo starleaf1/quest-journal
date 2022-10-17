@@ -43,6 +43,62 @@
 </template>
 
 <script>
+import { defineComponent } from '@vue/composition-api'
+import { computed, ref, toRef } from 'vue'
+import PhotoImage from "./PhotoImage.vue"
+import PhotoUploader from "@/components/common/PhotoUploader"
+import { useAuthStore } from '@/store/authStore'
+import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore'
+import { collection, onSnapshot } from '@firebase/firestore'
+import { db } from '@/plugins/firebase'
+
+export default defineComponent({
+  name: 'PhotoGallery',
+  props: {
+    images: {
+      type: Array,
+      required: true
+    }
+  },
+  components: {
+    PhotoImage,
+    PhotoUploader
+  },
+  setup(props) {
+    const authStore = useAuthStore()
+    const placeDetailsWindowStateStore = usePlaceDetailWindowStateStore()
+
+    const { images: imagesFromProps } = toRef(props)
+    const activePhoto = ref(0)
+    const isUploaderDialogOpen = ref(false)
+
+    const storageDirectory = computed(() => 
+      `uploads/${authStore.uid}/images/places/${placeDetailsWindowStateStore.inspectedPlace?.place_id}`
+    )
+    const allImages = computed(() => [
+      ...imagesFromProps.value.map(image => image.getUrl())
+    ])
+    const photoCollectionRef = computed(() =>
+      collection(db, `userData/${authStore.uid}/places/${placeDetailsWindowStateStore.inspectedPlace?.place_id}/images`)
+    )
+
+    const uploadedPhotos = ref([])
+    const unsubscribe = onSnapshot(photoCollectionRef.value, snapshot => {
+      uploadedPhotos.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    })
+
+    return {
+      allImages,
+      activePhoto,
+      isUploaderDialogOpen,
+      storageDirectory,
+      unsubscribe
+    }
+  },
+})
+</script>
+
+<!-- <script>
 import PhotoImage from './PhotoImage.vue';
 import PhotoUploader from "@/components/common/PhotoUploader"
 import { mapState } from 'pinia';
@@ -75,4 +131,4 @@ export default {
     })
   }
 }
-</script>
+</script> -->
