@@ -50,7 +50,7 @@ export default {
     savedPlaces: {
       immediate: true,
       handler () {
-        console.log('[color-grouping] Modification in savedPlaces. Repopulating...')
+        console.debug('[color-grouping] Modification in savedPlaces. Repopulating...')
         this.repopulatePlaces()
       }
     }

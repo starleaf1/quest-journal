@@ -38,10 +38,8 @@ export const useCategoriesStore = defineStore("categoriesStore", () => {
   };
 
   const findAllMembers = (keyword) => {
-    console.log("[categories-store] Finding all category members", keyword);
     const savedPlaces = savedPlacesStore.savedPlaces;
     const members = savedPlaces.filter((place) => place.category === keyword);
-    console.log("[categories-store] Found members:", members.length);
     return members;
   };
 

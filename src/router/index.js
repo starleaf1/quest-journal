@@ -31,7 +31,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log("[router] New route requested", to.path);
+  console.debug("[router] New route requested", to.path);
   const authStore = useAuthStore();
   console.debug("[router] Displaying auth for debug", authStore);
 
@@ -39,12 +39,12 @@ router.beforeEach((to, from, next) => {
     (record) => record.meta?.authRequired
   );
   if (!authStore?.isAuthenticated && routeRequiresAuth) {
-    console.log("[router] Protected route. Requesting authentication");
+    console.debug("[router] Protected route. Requesting authentication");
     authStore.originalDestination = to.path;
     return next("/login");
   } else {
     if (routeRequiresAuth)
-      console.log("[router] Access granted for protected route.");
+      console.debug("[router] Access granted for protected route.");
     return next();
   }
 });

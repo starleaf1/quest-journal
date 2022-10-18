@@ -5,7 +5,7 @@
       v-model="activePhoto"
     >
       <v-slide-item
-        v-for="(image, n) in images"
+        v-for="(image, n) in allImages"
         :key="n"
         v-slot="{ active, toggle }"
       >
@@ -43,14 +43,15 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
-import { computed, ref, toRef } from 'vue'
+import { defineComponent, watchEffect } from '@vue/composition-api'
+import { computed, ref } from 'vue'
 import PhotoImage from "./PhotoImage.vue"
 import PhotoUploader from "@/components/common/PhotoUploader"
 import { useAuthStore } from '@/store/authStore'
 import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore'
-import { collection, onSnapshot } from '@firebase/firestore'
-import { db } from '@/plugins/firebase'
+import { collection, onSnapshot, query } from '@firebase/firestore'
+import { db, storage } from '@/plugins/firebase'
+import { getDownloadURL, ref as storageRef } from 'firebase/storage'
 
 export default defineComponent({
   name: 'PhotoGallery',
@@ -68,33 +69,46 @@ export default defineComponent({
     const authStore = useAuthStore()
     const placeDetailsWindowStateStore = usePlaceDetailWindowStateStore()
 
-    const { images: imagesFromProps } = toRef(props)
     const activePhoto = ref(0)
     const isUploaderDialogOpen = ref(false)
 
     const storageDirectory = computed(() => 
       `uploads/${authStore.uid}/images/places/${placeDetailsWindowStateStore.inspectedPlace?.place_id}`
     )
-    const allImages = computed(() => [
-      ...imagesFromProps.value.map(image => image.getUrl())
-    ])
     const photoCollectionRef = computed(() =>
       collection(db, `userData/${authStore.uid}/places/${placeDetailsWindowStateStore.inspectedPlace?.place_id}/images`)
     )
-
+    
     const uploadedPhotos = ref([])
-    const unsubscribe = onSnapshot(photoCollectionRef.value, snapshot => {
-      uploadedPhotos.value = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    watchEffect(onCleanup => {
+      const unsubscribe = onSnapshot(query(photoCollectionRef.value), async snapshot => {
+        const downloadUrlPromises = snapshot.docs.map(doc => {
+          const gcsUrl = doc.data().gcsUrl
+          const photoGcsRef = storageRef(storage, gcsUrl)
+          return getDownloadURL(photoGcsRef)
+        })
+
+        uploadedPhotos.value = await Promise.all(downloadUrlPromises)
+      })
+
+      onCleanup(() => { unsubscribe() })
+    })
+
+    const allImages = computed(() => {
+      return [
+        ...props.images.map(image => image.getUrl()),
+        ...uploadedPhotos
+      ]
     })
 
     return {
       allImages,
       activePhoto,
       isUploaderDialogOpen,
-      storageDirectory,
-      unsubscribe
+      storageDirectory
     }
-  },
+  }
 })
 </script>
 

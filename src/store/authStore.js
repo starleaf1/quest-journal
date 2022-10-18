@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
 export const useAuthStore = defineStore("authStore", () => {
-  console.debug('[store] Auth store installed')
   const persisted = JSON.parse(localStorage.getItem('auth'))
 
   const isAuthenticated = ref(persisted?.isAuthenticated ?? false)
@@ -24,10 +23,6 @@ export const useAuthStore = defineStore("authStore", () => {
 
   watch([ isAuthenticated, isFetchingAuth, user ], ([ isAuthenticated, isFetchingAuth, user ]) => {
     localStorage.setItem('auth', JSON.stringify({ isAuthenticated, isFetchingAuth, user }))
-  })
-
-  useAuthStore().$onAction((ctx) => {
-    console.debug('[auth-store] Action subscription initiated', ctx)
   })
 
   return { isAuthenticated, isFetchingAuth, user, uid, storeAuthData, clearAuthData }

@@ -60,7 +60,6 @@ export default {
 
         const placeFilter = newPlace => {
           const isUnique = !existing.some(existingPlace => existingPlace.place_id === newPlace.place_id)
-          console.debug('[place-filter] Checking if place exists', newPlace.place_id, isUnique)
           return isUnique
         }
 
@@ -73,9 +72,7 @@ export default {
       }
 
       const fetchPlaces = async () => {
-        console.debug('[marker-group] Getting place list')
         const places = await getPlacesInBounds(e);
-        console.debug('[marker-group] Fetch complete', places)
         appendPlaces(places.filter(place => {
           return !place.types?.includes('political')
         }))

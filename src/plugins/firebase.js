@@ -26,7 +26,9 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   connectStorageEmulator(storage, "localhost", 9199);
 }
 
-enableIndexedDbPersistence(db).then(() => { console.log('[db-persistence] Database persistence is enabled on this device.') }).catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
+enableIndexedDbPersistence(db)
+  .then(() => { console.debug('[db-persistence] Database persistence is enabled on this device.') })
+  .catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
 
 export { app, db, functions, auth, storage };
 export default {
