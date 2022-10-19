@@ -43,15 +43,15 @@
 </template>
 
 <script>
-import { defineComponent, watchEffect } from '@vue/composition-api'
-import { computed, ref } from 'vue'
+import { defineComponent } from '@vue/composition-api'
+import { computed, ref, watchEffect } from 'vue'
 import PhotoImage from "./PhotoImage.vue"
 import PhotoUploader from "@/components/common/PhotoUploader"
 import { useAuthStore } from '@/store/authStore'
 import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore'
 import { collection, onSnapshot, query } from '@firebase/firestore'
 import { db, storage } from '@/plugins/firebase'
-import { getDownloadURL, ref as storageRef } from 'firebase/storage'
+import { getDownloadURL, ref as firebaseStorageRef } from '@firebase/storage'
 
 export default defineComponent({
   name: 'PhotoGallery',
@@ -71,35 +71,29 @@ export default defineComponent({
 
     const activePhoto = ref(0)
     const isUploaderDialogOpen = ref(false)
+    const uploadedPhotos = ref([])
 
     const storageDirectory = computed(() => 
       `uploads/${authStore.uid}/images/places/${placeDetailsWindowStateStore.inspectedPlace?.place_id}`
     )
+    const allImages = computed(() => [
+      ...uploadedPhotos.value?.map(photo => ({ getUrl () { return photo } })),
+      ...props.images
+    ])
     const photoCollectionRef = computed(() =>
       collection(db, `userData/${authStore.uid}/places/${placeDetailsWindowStateStore.inspectedPlace?.place_id}/images`)
     )
-    
-    const uploadedPhotos = ref([])
 
-    watchEffect(onCleanup => {
-      const unsubscribe = onSnapshot(query(photoCollectionRef.value), async snapshot => {
-        const downloadUrlPromises = snapshot.docs.map(doc => {
-          const gcsUrl = doc.data().gcsUrl
-          const photoGcsRef = storageRef(storage, gcsUrl)
-          return getDownloadURL(photoGcsRef)
-        })
-
-        uploadedPhotos.value = await Promise.all(downloadUrlPromises)
+    watchEffect(onCancel => {
+      const q = query(photoCollectionRef.value)
+      const unsubscribe = onSnapshot(q, async snapshot => {
+        uploadedPhotos.value = await Promise.all(snapshot.docs.map(doc => {
+          const photoStorageRef = firebaseStorageRef(storage, doc.data().gcsPath)
+          return getDownloadURL(photoStorageRef)
+        }))
       })
 
-      onCleanup(() => { unsubscribe() })
-    })
-
-    const allImages = computed(() => {
-      return [
-        ...props.images.map(image => image.getUrl()),
-        ...uploadedPhotos
-      ]
+      onCancel(() => { unsubscribe() })
     })
 
     return {
