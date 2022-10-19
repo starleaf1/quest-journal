@@ -88,7 +88,6 @@ export default defineComponent({
       const q = query(photoCollectionRef.value)
       const unsubscribe = onSnapshot(q, async snapshot => {
         uploadedPhotos.value = await Promise.all(snapshot.docs.map(doc => {
-          console.log(doc.data().gcsPath)
           const photoStorageRef = firebaseStorageRef(storage, doc.data().gcsPath)
           return getDownloadURL(photoStorageRef)
         }))
