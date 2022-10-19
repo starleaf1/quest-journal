@@ -3,11 +3,14 @@
     <v-slide-group
       :show-arrows="true"
       v-model="activePhoto"
+      class="mb-4"
     >
       <v-slide-item
         v-for="(image, n) in allImages"
         :key="n"
         v-slot="{ active, toggle }"
+        @click="toggle"
+        class="mx-2"
       >
         <PhotoImage
           :image="image"

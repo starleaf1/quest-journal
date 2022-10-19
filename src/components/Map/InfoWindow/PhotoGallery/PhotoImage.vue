@@ -1,13 +1,13 @@
 <template>
-  <v-img
-    class="ma-2 align-end justify-center"
-    :class="{ 'elevation-4': active }"
-    :src="src"
-    height="300"
-    max-width="300"
-    v-on="$listeners"
-  >
-  </v-img>
+  <v-card @click="$emit('click')">
+    <v-img
+      :src="src"
+      height="400"
+      max-width="400"
+      v-on="$listeners"
+    >
+    </v-img>
+  </v-card>
 </template>
 
 <script>
