@@ -68,6 +68,7 @@
           <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
           <ColorInput class="ml-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
+        <SocialMediaInput v-model="socialMedia" />
       </v-card-text>
       <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
         <v-dialog>
@@ -102,6 +103,7 @@ import { useSavedPlacesStore } from '@/store/savedPlaces';
 import TagInput from './InfoInput/TagInput/index.vue';
 import ColorInput from './ColorGrouping/ColorInput.vue';
 import { useCategoriesStore } from '@/store/categoriesStore';
+import SocialMediaInput from './SocialMedia/SocialMediaInput.vue'
 
 export default {
   name: "PlaceDetailsDialog",
@@ -144,7 +146,8 @@ export default {
       isSubmitting: false,
       noteValue: '',
       tagsValue: [],
-      categoryValue: null
+      categoryValue: null,
+      socialMedia: {}
     });
   },
   methods: {
@@ -154,6 +157,7 @@ export default {
     populateInputs () {
       this.$data.noteValue = this.placeData?.notes ?? ''
       this.$data.tagsValue = this.placeData?.tags ?? []
+      this.$data.socialMedia = this.placeData?.socialMedia ?? {}
       this.$data.categoryValue = this.categories.find(category => this.placeData?.category === category.category)
     },
 
@@ -179,7 +183,8 @@ export default {
           ...this.placeData,
           notes: this.$data.noteValue,
           tags: this.$data.tagsValue,
-          category: this.$data.categoryValue
+          category: this.$data.categoryValue,
+          socialMedia: this.$data.socialMedia
         })
       } catch (e) {
         console.error(e)
@@ -203,6 +208,6 @@ export default {
       this.populateInputs()
     }
   },
-  components: { OpeningHours, PhotoGallery, TagInput, ColorInput }
+  components: { OpeningHours, PhotoGallery, TagInput, ColorInput, SocialMediaInput }
 }
 </script>

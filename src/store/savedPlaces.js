@@ -41,6 +41,7 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
     notes,
     formatted_address,
     category,
+    socialMedia
   }) {
     const toBeSaved = {
       place_id,
@@ -61,6 +62,7 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
       },
       icon: icon ?? null,
       category: category ?? null,
+      socialMedia
     };
 
     console.debug("[saved-places-store] Attempting to save", toBeSaved);
