@@ -68,7 +68,7 @@
           <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
           <ColorInput class="ml-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
-        <SocialMediaInput v-model="socialMedia" />
+        <SocialMedia v-model="socialMedia" />
       </v-card-text>
       <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
         <v-dialog>
@@ -103,7 +103,7 @@ import { useSavedPlacesStore } from '@/store/savedPlaces';
 import TagInput from './InfoInput/TagInput/index.vue';
 import ColorInput from './ColorGrouping/ColorInput.vue';
 import { useCategoriesStore } from '@/store/categoriesStore';
-import SocialMediaInput from './SocialMedia/SocialMediaInput.vue'
+import SocialMedia from './SocialMedia/index.vue'
 
 export default {
   name: "PlaceDetailsDialog",
@@ -147,7 +147,11 @@ export default {
       noteValue: '',
       tagsValue: [],
       categoryValue: null,
-      socialMedia: {}
+      socialMedia: {
+        name: '',
+        username: '',
+        url: ''
+      }
     });
   },
   methods: {
@@ -208,6 +212,12 @@ export default {
       this.populateInputs()
     }
   },
-  components: { OpeningHours, PhotoGallery, TagInput, ColorInput, SocialMediaInput }
+  components: {
+    OpeningHours,
+    PhotoGallery,
+    TagInput,
+    ColorInput,
+    SocialMedia
+  }
 }
 </script>

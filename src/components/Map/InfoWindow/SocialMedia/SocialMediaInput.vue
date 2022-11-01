@@ -44,8 +44,7 @@
 </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
-import { ref, watchEffect } from 'vue'
+import { defineComponent, ref, watchEffect } from 'vue'
 
 export default defineComponent({
   props: {
@@ -66,9 +65,9 @@ export default defineComponent({
       }
     ])
 
-    const name = ref(props.value.name) ?? ''
-    const url = ref(props.value.url) ?? ''
-    const username = ref(props.value.username) ?? ''
+    const name = ref(props.value.name ?? '')
+    const url = ref(props.value.url ?? '')
+    const username = ref(props.value.username ?? '')
 
     watchEffect(() => {
       let urlPath = ''
