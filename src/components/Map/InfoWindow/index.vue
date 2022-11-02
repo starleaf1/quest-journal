@@ -16,23 +16,42 @@
             <span>Add to collection</span>
             <template #activator="{ on: tooltip }">
               <v-btn
+                v-if="isOnPC"
                 v-on="{ ...tooltip }"
-                :small="!isOnPC"
                 text
                 :loading="isSubmitting"
                 @click="savePlace"
               >
                 Save
               </v-btn>
+              <v-btn
+                v-else
+                v-on="{ ...tooltip }"
+                icon
+                :loading="isSubmitting"
+                @click="savePlace"
+              >
+                <v-icon>mdi-star</v-icon>
+              </v-btn>
             </template>
           </v-tooltip>
           <v-btn
+            v-if="isOnPC"
             text
             :href="placeData.url"
             target="_blank"
           >
             Open in Google Maps
             <v-icon right>mdi-launch</v-icon>
+          </v-btn>
+          <v-btn
+            v-else
+            icon
+            :href="placeData.url"
+            target="_blank"
+            small
+          >
+            <v-icon>mdi-launch</v-icon>
           </v-btn>
         </v-toolbar-items>
         <template #extension>
@@ -64,9 +83,9 @@
         />
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="my-6" />
         <v-textarea :disabled="isSubmitting" class="mt-2" v-model="noteValue" outlined label="My notes" />
-        <div class="d-flex align-center">
+        <div class="d-sm-flex align-center">
           <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
-          <ColorInput class="ml-4" :disabled="isSubmitting" v-model="categoryValue" />
+          <ColorInput class="ml-sm-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
         <SocialMedia v-model="socialMedia" />
       </v-card-text>

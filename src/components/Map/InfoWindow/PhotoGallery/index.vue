@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-slide-group
-      :show-arrows="true"
       v-model="activePhoto"
       class="mb-4"
     >

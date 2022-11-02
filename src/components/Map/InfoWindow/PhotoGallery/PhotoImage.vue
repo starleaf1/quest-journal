@@ -2,7 +2,7 @@
   <v-card @click="$emit('click')">
     <v-img
       :src="src"
-      height="400"
+      height="200"
       max-width="400"
       v-on="$listeners"
     >
