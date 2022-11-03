@@ -7,7 +7,14 @@
           fluid
           class="fill-height"
         >
-          <v-row><v-textarea :disabled="isSubmitting" outlined v-model="notes" label="Notes" /></v-row>
+          <v-row>
+            <v-textarea
+            :disabled="isSubmitting"
+            outlined
+            v-model="notes"
+            label="Notes"
+            />
+          </v-row>
           <v-row>
             <v-col cols="6">
               <v-autocomplete

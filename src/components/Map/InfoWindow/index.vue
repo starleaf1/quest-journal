@@ -9,7 +9,7 @@
         <v-btn icon @click="handleCloseDialog">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title class="text-h6 pb-0">{{place?.name}}</v-toolbar-title>
+        <v-toolbar-title class="text-h6 pb-0">Details</v-toolbar-title>
         <v-spacer />
         <v-toolbar-items>
           <v-tooltip bottom>
@@ -35,7 +35,7 @@
               </v-btn>
             </template>
           </v-tooltip>
-          <v-btn
+          <!-- <v-btn
             v-if="isOnPC"
             text
             :href="placeData.url"
@@ -52,7 +52,16 @@
             small
           >
             <v-icon>mdi-launch</v-icon>
-          </v-btn>
+          </v-btn> -->
+          <InfoWindowMenu
+            :items="[
+              {
+                icon: 'mdi-launch',
+                label: 'Open in Google Maps',
+                href: placeData.url
+              }
+            ]"
+          />
         </v-toolbar-items>
         <template #extension>
           <v-chip-group class="pt-0 ma-0">
@@ -67,12 +76,8 @@
           </v-chip-group>
         </template>
       </v-toolbar>
-      <v-container class="fill-height" v-if="loading">
-        <v-row align="center" justify="center">
-          <v-progress-circular indeterminate color="primary" />
-          <span class="ml-4">Loading place details</span>
-        </v-row>
-      </v-container>
+      <v-card-title>{{ place?.name }}</v-card-title>
+      <InfoWindowLoadingSkeleton v-if="loading" />
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
         <OpeningHours
@@ -116,13 +121,15 @@
 <script>
 import { usePlaceDetailsStore } from '@/store/placeDetails'
 import { mapActions, mapState } from 'pinia';
+import { useSavedPlacesStore } from '@/store/savedPlaces';
+import { useCategoriesStore } from '@/store/categoriesStore';
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
-import { useSavedPlacesStore } from '@/store/savedPlaces';
 import TagInput from './InfoInput/TagInput/index.vue';
 import ColorInput from './ColorGrouping/ColorInput.vue';
-import { useCategoriesStore } from '@/store/categoriesStore';
 import SocialMedia from './SocialMedia/index.vue'
+import InfoWindowMenu from './InfoWindowMenu.vue'
+import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
 
 export default {
   name: "PlaceDetailsDialog",
@@ -185,6 +192,7 @@ export default {
     },
 
     handleCloseDialog() {
+      console.log('[info-window-close-click] Triggered')
       this.$emit("click:outside");
     },
     async getPlaceDetails(placeId) {
@@ -236,7 +244,9 @@ export default {
     PhotoGallery,
     TagInput,
     ColorInput,
-    SocialMedia
+    SocialMedia,
+    InfoWindowMenu,
+    InfoWindowLoadingSkeleton
   }
 }
 </script>
