@@ -77,7 +77,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    console.log('[info-window-menu] Menu items', props.showOutside)
     const itemsInMenu = computed(() => {
       const filtered = props.items.filter((item, index) => index + 1 > props.showOutside)
       return filtered

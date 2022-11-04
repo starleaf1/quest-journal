@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex align-center justify-space-between">
     <div class="flex-shrink-1">
       <v-select
         outlined
@@ -40,6 +40,11 @@
         "
       />
     </div>
+    <div>
+      <v-btn icon @click="emitDelete">
+        <v-icon>mdi-trash</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -60,6 +65,10 @@ export default defineComponent({
   setup(props, { emit }) {
     const items = ref([
       {
+        icon: 'mdi-web',
+        title: 'Website'
+      },
+      {
         icon: 'mdi-instagram',
         title: 'Instagram'
       }
@@ -73,7 +82,11 @@ export default defineComponent({
       let urlPath = ''
       switch (name.value.toLowerCase()) {
         case 'instagram':
-          urlPath = username.value?.charAt(0) === '@' ? username.value.substring(1) : username.value
+          urlPath = (
+            username.value?.charAt(0) === '@' ?
+            username.value.substring(1) :
+            username.value
+          )
           url.value = `https://${name.value.toLowerCase()}.com/${urlPath ?? ''}`
           break;
       
@@ -87,7 +100,11 @@ export default defineComponent({
       })
     })
 
-    return { items, name, url, username }
+    const emitDelete = () => {
+      emit('click:delete')
+    }
+
+    return { items, name, url, username, emitDelete }
   },
 })
 </script>

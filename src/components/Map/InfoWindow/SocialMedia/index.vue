@@ -1,20 +1,23 @@
 <script>
 import { defineComponent, ref, watchEffect } from 'vue'
 import { Fragment as fragment } from 'vue-fragment'
-import SocialMediaInput from './SocialMediaInput.vue'
+import SocialMediaInput from './SocialMediaEdit'
 import SocialMediaLink from './SocialMediaLink.vue'
 
 export default defineComponent({
   name: "SocialMedia",
   props: {
-    value: Object
+    value: {
+      type: Array,
+      default: () => []
+    }
   },
   setup(props, { emit }) {
-    const internalValue = ref(props.value ?? {});
+    const internalValue = ref(props.value ?? []);
     const editMode = ref(false);
 
     watchEffect(() => {
-      emit('input', { ...internalValue.value })
+      emit('input', [...internalValue.value])
     })
     watchEffect(() => {
       emit('change:edit-mode', editMode.value)
@@ -32,8 +35,8 @@ export default defineComponent({
 
 <template>
   <fragment>
-    <v-toolbar-items>
-      <v-toolbar-title class="justify-center">Links &amp; Social Media</v-toolbar-title>
+    <div class="d-flex mb-2">
+      <h3 class="text-h7 justify-center align-center">Links &amp; Social Media</h3>
       <div class="ml-4 justify-center">
         <v-btn
           v-if="!editMode"
@@ -54,12 +57,17 @@ export default defineComponent({
           Done
         </v-btn>
       </div>
-    </v-toolbar-items>
+    </div>
     <fragment v-if="editMode">
       <SocialMediaInput class="mt-2" v-model="internalValue" />
     </fragment>
-    <fragment v-else-if="Object.keys(value).length">
-      <SocialMediaLink v-bind="internalValue" />
+    <fragment v-else-if="internalValue.length">
+      <div v-for="(link, i) in internalValue" :key="i">
+        <SocialMediaLink v-bind="link" />
+      </div>
+    </fragment>
+    <fragment v-else>
+      <div class="my-3 text--disabled text-center">No social media link</div>
     </fragment>
   </fragment>
 </template>

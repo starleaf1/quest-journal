@@ -1,7 +1,21 @@
 <template>
-  <v-skeleton-loader
-    types="heading, image, text"
-  />
+  <fragment>
+    <div class="my-1">
+      <v-skeleton-loader
+        type="image"
+      />
+    </div>
+    <div class="my-1">
+      <v-skeleton-loader
+        type="actions"
+      />
+    </div>
+    <div class="my-1">
+      <v-skeleton-loader
+        type="paragraph"
+      />
+    </div>
+  </fragment>
 </template>
 
 <script>

@@ -4,7 +4,7 @@
     :value="open"
     @click:outside="handleCloseDialog"
   >
-    <v-sheet min-height="100vh" width="100%">
+    <v-sheet class="pb-10" min-height="100vh" width="100%">
       <v-toolbar dense color="primary" dark>
         <v-btn icon @click="handleCloseDialog">
           <v-icon>mdi-close</v-icon>
@@ -35,24 +35,6 @@
               </v-btn>
             </template>
           </v-tooltip>
-          <!-- <v-btn
-            v-if="isOnPC"
-            text
-            :href="placeData.url"
-            target="_blank"
-          >
-            Open in Google Maps
-            <v-icon right>mdi-launch</v-icon>
-          </v-btn>
-          <v-btn
-            v-else
-            icon
-            :href="placeData.url"
-            target="_blank"
-            small
-          >
-            <v-icon>mdi-launch</v-icon>
-          </v-btn> -->
           <InfoWindowMenu
             :items="[
               {
@@ -92,7 +74,7 @@
           <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
           <ColorInput class="ml-sm-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
-        <SocialMedia v-model="socialMedia" />
+        <SocialMedia />
       </v-card-text>
       <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
         <v-dialog>
@@ -109,7 +91,13 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn @click="handleDeleteButtonClick" text color="error">Delete</v-btn>
+              <v-btn
+                @click="handleDeleteButtonClick"
+                text
+                color="error"
+              >
+                Delete
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -173,11 +161,7 @@ export default {
       noteValue: '',
       tagsValue: [],
       categoryValue: null,
-      socialMedia: {
-        name: '',
-        username: '',
-        url: ''
-      }
+      socialMedia: []
     });
   },
   methods: {
@@ -185,14 +169,19 @@ export default {
     ...mapActions(useSavedPlacesStore, ['append', 'remove']),
 
     populateInputs () {
+      console.log('[info-window] Triggering population input...', this.$data.socialMedia)
       this.$data.noteValue = this.placeData?.notes ?? ''
       this.$data.tagsValue = this.placeData?.tags ?? []
-      this.$data.socialMedia = this.placeData?.socialMedia ?? {}
-      this.$data.categoryValue = this.categories.find(category => this.placeData?.category === category.category)
+      this.$data.socialMedia = this.placeData?.socialMedia ?? []
+      this.$data.categoryValue = this.categories.find(
+        category => (
+          this.placeData?.category === category.category
+        )
+      )
+      console.log('[info-window] After triggering.', this.$data.socialMedia)
     },
 
     handleCloseDialog() {
-      console.log('[info-window-close-click] Triggered')
       this.$emit("click:outside");
     },
     async getPlaceDetails(placeId) {
@@ -218,7 +207,7 @@ export default {
           socialMedia: this.$data.socialMedia
         })
       } catch (e) {
-        console.error(e)
+        console.error('[info-window]', e)
       } finally {
         this.$data.isSubmitting = false
       }
@@ -236,7 +225,12 @@ export default {
       this.getPlaceDetails(v?.place_id);
     },
     placeData () {
+      console.log('[info-window-debug] place-data', this.placeData)
       this.populateInputs()
+    },
+    socialMedia (v, o) {
+      console.log('[info-window-debug] socialMedia current value', v)
+      console.log('[info-window-debug] socialMedia old value', o)
     }
   },
   components: {
