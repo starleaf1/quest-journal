@@ -74,7 +74,7 @@
           <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
           <ColorInput class="ml-sm-4" :disabled="isSubmitting" v-model="categoryValue" />
         </div>
-        <SocialMedia />
+        <SocialMedia v-model="socialMedia" />
       </v-card-text>
       <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
         <v-dialog>

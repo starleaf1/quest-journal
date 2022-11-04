@@ -8,6 +8,7 @@
         v-model="name"
         item-text="title"
         item-value="title"
+        @change="handleInput"
       >
         <template #item="{ item, on, attrs }">
           <v-list-item v-on="on" v-bind="attrs">
@@ -26,18 +27,25 @@
       </v-select>
     </div>
     <div class="mx-2">
-      <v-text-field outlined label="Username" placeholder="@john.smith" v-model="username" />
+      <v-text-field
+        outlined
+        label="Username"
+        placeholder="@john.smith"
+        v-model="username"
+        @input="handleInput"
+      />
     </div>
     <div class="flex-grow-1">
       <v-text-field
         outlined
         label="Address"
-        v-model="url"
         :placeholder="
           value.name?.length ?
           `https://www.${value.name.toLowerCase()}.com/john.smith` :
           'https://www.example.com/john.smith'
         "
+        v-model="url"
+        @input="handleInput"
       />
     </div>
     <div>
@@ -49,17 +57,13 @@
 </template>
 
 <script>
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   props: {
     value: {
       type: Object,
-      default: () => ({
-        name: '',
-        username: '',
-        url: ''
-      })
+      required: true
     }
   },
   setup(props, { emit }) {
@@ -74,11 +78,33 @@ export default defineComponent({
       }
     ])
 
-    const name = ref(props.value.name ?? '')
-    const url = ref(props.value.url ?? '')
-    const username = ref(props.value.username ?? '')
+    const name = ref(props.value?.name ?? '')
+    const url = ref(props.value?.url ?? '')
+    const username = ref(props.value?.username ?? '')
 
-    watchEffect(() => {
+    // watchEffect(() => {
+    //   let urlPath = ''
+    //   switch (name.value.toLowerCase()) {
+    //     case 'instagram':
+    //       urlPath = (
+    //         username.value?.charAt(0) === '@' ?
+    //         username.value.substring(1) :
+    //         username.value
+    //       )
+    //       url.value = `https://${name.value.toLowerCase()}.com/${urlPath ?? ''}`
+    //       break;
+      
+    //     default:
+    //       break;
+    //   }
+    //   emit('input', {
+    //     name: name.value,
+    //     username: username.value,
+    //     url: url.value
+    //   })
+    // })
+
+    const handleInput = () => {
       let urlPath = ''
       switch (name.value.toLowerCase()) {
         case 'instagram':
@@ -98,13 +124,13 @@ export default defineComponent({
         username: username.value,
         url: url.value
       })
-    })
+    }
 
     const emitDelete = () => {
       emit('click:delete')
     }
 
-    return { items, name, url, username, emitDelete }
+    return { items, name, url, username, handleInput, emitDelete }
   },
 })
 </script>

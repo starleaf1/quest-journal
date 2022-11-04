@@ -2,11 +2,11 @@
   <fragment>
     <div
       v-for="(link, i) in internal"
-      :key="JSON.stringify(link)"
+      :key="`${JSON.stringify}${i}`"
     >  
       <SocialMediaInput
-        v-model="internal[i]"
         @click:delete="deleteLink(i)"
+        v-model="internal[i]"
       />
     </div>
     <v-btn
@@ -32,35 +32,33 @@ export default defineComponent({
       default: () => []
     }
   },
-  setup(props, { emit }) {
+  setup(
+    props, { emit }
+  ) {
     const internal = ref(props.value)
     
-    const emitValue = () => {
-      emit('input', internal.value)
-    }
-
     watchEffect(() => {
-      // emitValue()
       emit('input', internal.value)
     })
 
     const newLink = () => {
-      internal.value = [...internal.value, {
-        name: '',
+      const newElement = {
+        url: '',
         username: '',
-        url: ''
-      }]
+        name: ''
+      }
+      internal.value = [...internal.value, newElement]
     }
 
-    const removeLink = (i) => {
+    const deleteLink = (i) => {
       internal.value.splice(i, 1)
     }
 
     return {
       internal,
-      emitValue,
+      // emitValue,
       newLink,
-      removeLink
+      deleteLink
     }
   },
   components: {

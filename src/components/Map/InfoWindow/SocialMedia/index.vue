@@ -19,11 +19,18 @@ export default defineComponent({
     watchEffect(() => {
       emit('input', [...internalValue.value])
     })
-    watchEffect(() => {
-      emit('change:edit-mode', editMode.value)
-    })
+    
+    const toggleEditMode = () => {
+      editMode.value = !editMode.value
 
-    return { internalValue, editMode }
+      if (!editMode.value) {
+        internalValue.value = internalValue.value.filter(link => {
+          return link?.url?.length > 0
+        })
+      }
+    }
+
+    return { internalValue, editMode, toggleEditMode }
   },
   components: {
     fragment,
@@ -43,7 +50,7 @@ export default defineComponent({
           small
           rounded
           outlined
-          @click="editMode = !editMode"
+          @click="toggleEditMode"
         >
           <v-icon left>mdi-pencil</v-icon>Edit
         </v-btn>
@@ -52,7 +59,7 @@ export default defineComponent({
           small
           rounded
           outlined
-          @click="editMode = !editMode"
+          @click="toggleEditMode"
         >
           Done
         </v-btn>
