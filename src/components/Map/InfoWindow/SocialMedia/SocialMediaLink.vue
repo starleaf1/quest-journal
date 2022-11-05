@@ -26,21 +26,37 @@ export default defineComponent({
         case 'whatsapp':
           return 'mdi-whatsapp'
         case 'facebook':
-          return 'mdi-youtube'
+          return 'mdi-facebook'
         default:
           return 'mdi-web'
       }
     })
 
-    return { icon }
+    const color = computed(() => {
+      switch (props.name.toLowerCase()) {
+        case 'instagram':
+          return '#e1306c'
+        case 'whatsapp':
+          return '#25d366'
+        case 'facebook':
+          return '#4267B2'
+        case 'youtube':
+          return '#f00'
+        default:
+          return 'primary'
+      }
+    })
+
+    return { icon, color }
   },
 })
 </script>
 
 <template>
   <v-btn
+    class="mb-2 mb-lg-0 mr-0 mr-lg-2"
+    :color="color"
     outlined
-    :color="name"
     :href="url"
     target="_blank"
     tile
