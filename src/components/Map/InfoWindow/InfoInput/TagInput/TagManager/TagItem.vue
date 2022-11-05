@@ -21,7 +21,7 @@
     </v-list-item-content>
     <v-list-item-action>
       <v-btn v-if="!isEditing" small icon><v-icon>mdi-pencil</v-icon></v-btn>
-      <v-btn v-else small icon><v-icon>mdi-trash</v-icon></v-btn>
+      <v-btn v-else small icon><v-icon>mdi-delete</v-icon></v-btn>
     </v-list-item-action>
     <v-list-item-action-text>
       <span v-if="isEditing">Delete</span>

@@ -1,8 +1,14 @@
 <template>
-  <div class="d-flex align-center justify-space-between">
-    <div class="flex-shrink-1">
+  <v-sheet
+    :outlined="!isOnPC"
+    class="d-lg-flex align-center justify-space-between mb-lg-0 mb-2 pa-2"
+  >
+    <div
+      class="flex-shrink-1 mb-n4 mb-lg-0"
+    >
       <v-select
         outlined
+        dense
         label="Social media"
         :items="items"
         v-model="name"
@@ -26,18 +32,24 @@
         </template>
       </v-select>
     </div>
-    <div class="mx-2">
+    <div
+      class="mx-0 mx-lg-2 mb-n4 mb-lg-0"
+    >
       <v-text-field
         outlined
-        label="Username"
+        dense
+        :label="hasUsername.includes(value.name) ? 'Username' : 'Label'"
         placeholder="@john.smith"
         v-model="username"
         @input="handleInput"
       />
     </div>
-    <div class="flex-grow-1">
+    <div
+      class="flex-grow-1 mb-n4 mb-lg-0"
+    >
       <v-text-field
         outlined
+        dense
         label="Address"
         :placeholder="
           value.name?.length ?
@@ -48,12 +60,14 @@
         @input="handleInput"
       />
     </div>
-    <div>
-      <v-btn icon @click="emitDelete">
-        <v-icon>mdi-trash</v-icon>
-      </v-btn>
-    </div>
-  </div>
+    <v-btn class="align-self-start" v-if="isOnPC" icon @click="emitDelete">
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
+    <v-btn class="align-self-start" v-else block text @click="emitDelete">
+      <v-icon left>mdi-delete</v-icon>
+      Delete
+    </v-btn>
+  </v-sheet>
 </template>
 
 <script>
@@ -75,6 +89,22 @@ export default defineComponent({
       {
         icon: 'mdi-instagram',
         title: 'Instagram'
+      },
+      {
+        icon: 'mdi-facebook',
+        title: 'Facebook'
+      },
+      {
+        icon: 'mdi-twitter',
+        title: 'Twitter'
+      },
+      {
+        icon: 'mdi-whatsapp',
+        title: 'WhatsApp'
+      },
+      {
+        icon: 'mdi-youtube',
+        title: 'YouTube'
       }
     ])
 
@@ -82,27 +112,13 @@ export default defineComponent({
     const url = ref(props.value?.url ?? '')
     const username = ref(props.value?.username ?? '')
 
-    // watchEffect(() => {
-    //   let urlPath = ''
-    //   switch (name.value.toLowerCase()) {
-    //     case 'instagram':
-    //       urlPath = (
-    //         username.value?.charAt(0) === '@' ?
-    //         username.value.substring(1) :
-    //         username.value
-    //       )
-    //       url.value = `https://${name.value.toLowerCase()}.com/${urlPath ?? ''}`
-    //       break;
-      
-    //     default:
-    //       break;
-    //   }
-    //   emit('input', {
-    //     name: name.value,
-    //     username: username.value,
-    //     url: url.value
-    //   })
-    // })
+    const hasUsername = ref([
+      'Instagram',
+      'Facebook',
+      'Twitter',
+      'WhatsApp',
+      'YouTube'
+    ])
 
     const handleInput = () => {
       let urlPath = ''
@@ -130,7 +146,15 @@ export default defineComponent({
       emit('click:delete')
     }
 
-    return { items, name, url, username, handleInput, emitDelete }
+    return {
+      items,
+      name,
+      url,
+      username,
+      handleInput,
+      emitDelete,
+      hasUsername
+    }
   },
 })
 </script>

@@ -42,7 +42,7 @@ export default defineComponent({
 
 <template>
   <fragment>
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-4">
       <h3 class="text-h7 justify-center align-center">Links &amp; Social Media</h3>
       <div class="ml-4 justify-center">
         <v-btn
@@ -69,9 +69,7 @@ export default defineComponent({
       <SocialMediaInput class="mt-2" v-model="internalValue" />
     </fragment>
     <fragment v-else-if="internalValue.length">
-      <div v-for="(link, i) in internalValue" :key="i">
-        <SocialMediaLink v-bind="link" />
-      </div>
+      <SocialMediaLink v-for="(link, i) in internalValue" :key="i" v-bind="link" />
     </fragment>
     <fragment v-else>
       <div class="my-3 text--disabled text-center">No social media link</div>

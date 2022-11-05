@@ -21,6 +21,12 @@ export default defineComponent({
       switch (props.name.toLowerCase()) {
         case 'instagram':
           return 'mdi-instagram'
+        case 'youtube':
+          return 'mdi-youtube'
+        case 'whatsapp':
+          return 'mdi-whatsapp'
+        case 'facebook':
+          return 'mdi-youtube'
         default:
           return 'mdi-web'
       }
@@ -32,16 +38,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="mt-2">
-    <v-btn
-      x-large
-      outlined
-      :color="name"
-      :href="url"
-      target="_blank"
-    >
-      <v-icon large left>{{ icon }}</v-icon>
-      {{username ?? name}}
-    </v-btn>
-  </div>
+  <v-btn
+    outlined
+    :color="name"
+    :href="url"
+    target="_blank"
+    tile
+    :block="!isOnPC"
+  >
+    <v-icon left>{{ icon }}</v-icon>
+    {{username.length ? username : name}}
+  </v-btn>
 </template>
