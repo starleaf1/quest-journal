@@ -71,7 +71,7 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
     await setDoc(docRef, toBeSaved);
   }
 
-  async function findById(id) {
+  function findById(id) {
     return savedPlaces.value.find((place) => place.place_id === id);
   }
 
