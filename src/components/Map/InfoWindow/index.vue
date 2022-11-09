@@ -4,6 +4,7 @@
     :value="open"
     @click:outside="handleCloseDialog"
   >
+    <InfoInputBottomSheet />
     <v-sheet class="pb-10" min-height="100vh" width="100%">
       <v-toolbar dense color="primary" dark>
         <v-btn icon @click="handleCloseDialog">
@@ -118,6 +119,8 @@ import ColorInput from './ColorGrouping/ColorInput.vue';
 import SocialMedia from './SocialMedia/index.vue'
 import InfoWindowMenu from './InfoWindowMenu.vue'
 import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
+import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
+import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -167,6 +170,7 @@ export default {
   methods: {
     ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
     ...mapActions(useSavedPlacesStore, ['append', 'remove']),
+    ...mapActions(useSavePlaceDialogStore, ['openSaveDialog', 'closeSaveDialog']),
 
     populateInputs () {
       console.log('[info-window] Triggering population input...', this.$data.socialMedia)
@@ -205,6 +209,7 @@ export default {
           category: this.$data.categoryValue,
           socialMedia: this.$data.socialMedia
         })
+        this.openSaveDialog(this.place?.place_id)
       } catch (e) {
         console.error('[info-window]', e)
       } finally {
@@ -224,7 +229,6 @@ export default {
       this.getPlaceDetails(v?.place_id);
     },
     placeData () {
-      console.log('[info-window-debug] place-data', this.placeData)
       this.populateInputs()
     }
   },
@@ -235,7 +239,8 @@ export default {
     ColorInput,
     SocialMedia,
     InfoWindowMenu,
-    InfoWindowLoadingSkeleton
+    InfoWindowLoadingSkeleton,
+    InfoInputBottomSheet
   }
 }
 </script>
