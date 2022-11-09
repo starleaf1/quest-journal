@@ -178,7 +178,6 @@ export default {
           this.placeData?.category === category.category
         )
       )
-      console.log('[info-window] After triggering.', this.$data.socialMedia)
     },
 
     handleCloseDialog() {
@@ -227,10 +226,6 @@ export default {
     placeData () {
       console.log('[info-window-debug] place-data', this.placeData)
       this.populateInputs()
-    },
-    socialMedia (v, o) {
-      console.log('[info-window-debug] socialMedia current value', v)
-      console.log('[info-window-debug] socialMedia old value', o)
     }
   },
   components: {
