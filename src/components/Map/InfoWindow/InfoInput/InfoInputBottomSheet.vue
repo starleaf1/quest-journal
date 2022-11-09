@@ -22,6 +22,12 @@
       </v-menu>
       <v-list-item>
         <v-list-item-content>
+          <v-list-item-title>Tags</v-list-item-title>
+          <v-list-item-subtitle v-text="tagOptionLabel" />
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-content>
           <v-list-item-title>Add more information</v-list-item-title>
           <v-list-item-subtitle>Notes, social media, and web links</v-list-item-subtitle>
         </v-list-item-content>
@@ -44,10 +50,20 @@ export default defineComponent({
       return savedPlacesStore.findById(savePlaceDialogStore.placeId)
     })
 
+    const tagOptionLabel = computed(() => {
+      if (!savedPlace.value?.tags?.length) return 'Add tags'
+      return (
+        savedPlace.value?.tags?.length <= 3 ?
+        savedPlace.value?.tags?.join(', ') : 
+        `${savedPlace.value?.tags?.slice(0, 2)}, +${savedPlace.value?.tags?.length - 2} more`
+      )
+    })
+
     return {
       savePlaceDialogStore,
       savedPlacesStore,
-      savedPlace
+      savedPlace,
+      tagOptionLabel
     }
   }
 })
