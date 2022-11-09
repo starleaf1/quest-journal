@@ -39,7 +39,7 @@ export default {
   methods: {
     ...mapActions(useCategoriesStore, ["modify"]),
     handleCloseClick() {
-      this.$emit("close");
+      this.$emit("click:close");
     }
   },
   data() {
