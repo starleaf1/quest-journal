@@ -1,30 +1,33 @@
 <template>
   <v-card>
-    <v-card-title>Pick a category</v-card-title>
+    <v-card-title>Select a list</v-card-title>
     <v-card-text>
-      <v-radio-group v-model="selectedCategory">
-        <v-radio
-          v-for="category in categoriesStore.categories"
-          :key="category.category"
-          :value="category.category"
-        >
-          <template #label>
-            <span>{{category.category}}</span>
-            <v-icon x-small right :color="category.color">mdi-circle</v-icon>
-          </template>
-        </v-radio>
-        <v-radio
-          :value="null"
-        >
-          <template #label>
-            <span>Uncategorized</span>
-            <v-icon x-small right color="#000">mdi-circle</v-icon>
-          </template>
-        </v-radio>
-      </v-radio-group>
+      <v-autocomplete
+        v-model="selectedCategory"
+        :items="categoriesStore.categories"
+        item-text="category"
+        item-value="id"
+        label="List"
+        clearable
+      >
+        <template #item="{ item }">
+          <v-list-item-icon>
+            <v-icon :color="item.color">mdi-circle</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>{{ item.category }}</v-list-item-content>
+        </template>
+      </v-autocomplete>
     </v-card-text>
     <v-card-actions>
-      <v-btn text>Manage</v-btn>
+      <v-dialog
+        fullscreen
+        v-model="colorManagerOpen"
+      >
+        <ColorManager />
+        <template #activator="{ on }">
+          <v-btn text v-on="on">Manage</v-btn>
+        </template>
+      </v-dialog>
       <v-spacer />
       <v-btn color="primary">Done</v-btn>
     </v-card-actions>
@@ -33,17 +36,34 @@
 
 <script>
 import { useCategoriesStore } from '@/store/categoriesStore'
+import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore'
 import { defineComponent, ref } from 'vue'
+import ColorManager from "@/components/Map/InfoWindow/ColorGrouping/ColorManager.vue"
 
 export default defineComponent({
   setup(props, { emit }) {
     const categoriesStore = useCategoriesStore()
-    const selectedCategory = ref(null)
+    const placeDetailsDisplayStore = usePlaceDetailWindowStateStore()
+
+    const selectedCategory = ref(placeDetailsDisplayStore.inspectedPlace.category)
+
     const emitCategory = () => {
-      return emit('input', selectedCategory.value)
+      return emit('input', selectedCategory.value.length ? selectedCategory.value : null)
     }
-    return { selectedCategory, emitCategory, categoriesStore }
+
+    const colorManagerOpen = ref(false)
+
+    return {
+      selectedCategory,
+      emitCategory,
+      categoriesStore,
+      placeDetailsDisplayStore,
+      colorManagerOpen
+    }
   },
+  components: {
+    ColorManager
+  }
 })
 </script>
 

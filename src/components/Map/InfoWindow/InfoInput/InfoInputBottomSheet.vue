@@ -21,7 +21,7 @@
             <v-list-item-content>
               <v-list-item-title v-text="'Add to list'" />
               <v-list-item-subtitle
-                v-text="savedPlace.category?.length ? savedPlace.category : 'Uncategorized'"
+                v-text="savedPlace?.category?.length ? savedPlace.category : 'Uncategorized'"
               />
             </v-list-item-content>
           </v-list-item>

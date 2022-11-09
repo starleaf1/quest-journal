@@ -13,7 +13,7 @@
         <v-toolbar-title class="text-h6 pb-0">Details</v-toolbar-title>
         <v-spacer />
         <v-toolbar-items>
-          <v-tooltip bottom>
+          <v-tooltip v-if="!isPlaceSaved" bottom>
             <span>Add to collection</span>
             <template #activator="{ on: tooltip }">
               <v-btn
@@ -23,7 +23,7 @@
                 :loading="isSubmitting"
                 @click="savePlace"
               >
-                Save
+                Add to collection
               </v-btn>
               <v-btn
                 v-else
@@ -32,7 +32,30 @@
                 :loading="isSubmitting"
                 @click="savePlace"
               >
-                <v-icon>mdi-star</v-icon>
+                <v-icon>mdi-star-plus</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip v-else bottom>
+            <span>Change list, tags, notes, links</span>
+            <template #activator="{ on: tooltip }">
+              <v-btn
+                v-if="isOnPC"
+                v-on="{ ...tooltip }"
+                text
+                :loading="isSubmitting"
+                @click="openSaveDialog(place?.place_id)"
+              >
+                Change Details
+              </v-btn>
+              <v-btn
+                v-else
+                v-on="{ ...tooltip }"
+                icon
+                :loading="isSubmitting"
+                @click="openSaveDialog(place?.place_id)"
+              >
+                <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
           </v-tooltip>
@@ -77,32 +100,6 @@
         </div>
         <SocialMedia v-model="socialMedia" />
       </v-card-text>
-      <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
-        <v-dialog>
-          <template #activator="{ on: dialog }">
-            <v-btn v-on="dialog" color="error">
-              <v-icon left>mdi-delete</v-icon>
-              <span>Delete</span>
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>Delete place</v-card-title>
-            <v-card-text>
-              Do you want to remove this place from your saved places list?
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                @click="handleDeleteButtonClick"
-                text
-                color="error"
-              >
-                Delete
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
     </v-sheet>
   </v-dialog>
 </template>
