@@ -1,11 +1,18 @@
 <template>
-  <v-bottom-sheet v-model="isSaveDialogOpen">
-    <v-toolbar class="justify-space-between">
+  <v-bottom-sheet v-model="savePlaceDialogStore.isSaveDialogOpen">
+    <v-toolbar flat>
       <v-toolbar-title>Saved to favorites</v-toolbar-title>
-      <v-btn color="primary" text>Done</v-btn>
+      <v-spacer />
+      <v-btn
+        color="primary"
+        text
+        @click="savePlaceDialogStore.closeSaveDialog()"
+      >
+        Done
+      </v-btn>
     </v-toolbar>
     <v-list>
-      <v-menu>
+      <v-dialog>
         <template #activator="{ on }">
           <v-list-item
             two-line
@@ -19,7 +26,8 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-      </v-menu>
+        <CategoryPicker />
+      </v-dialog>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Tags</v-list-item-title>
@@ -40,6 +48,7 @@
 import { useSavedPlacesStore } from '@/store/savedPlaces';
 import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
 import { defineComponent, computed } from 'vue';
+import CategoryPicker from "./CategoryPicker.vue"
 
 export default defineComponent({
   setup () {
@@ -65,6 +74,9 @@ export default defineComponent({
       savedPlace,
       tagOptionLabel
     }
+  },
+  components: {
+    CategoryPicker
   }
 })
 </script>
