@@ -12,7 +12,7 @@
       </v-btn>
     </v-toolbar>
     <v-list>
-      <v-dialog>
+      <v-dialog v-model="isCategoryPickerVisible">
         <template #activator="{ on }">
           <v-list-item
             two-line
@@ -26,14 +26,19 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-        <CategoryPicker />
+        <CategoryPicker @success="isCategoryPickerVisible = false" />
       </v-dialog>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Tags</v-list-item-title>
-          <v-list-item-subtitle v-text="tagOptionLabel" />
-        </v-list-item-content>
-      </v-list-item>
+      <v-dialog v-model="isTaggerVisible">
+        <template #activator="{ on }">
+          <v-list-item v-on="on">
+            <v-list-item-content>
+              <v-list-item-title>Tags</v-list-item-title>
+              <v-list-item-subtitle v-text="tagOptionLabel" />
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <TagInputModal @success="isTaggerVisible = false" />
+      </v-dialog>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Add more information</v-list-item-title>
@@ -47,8 +52,9 @@
 <script>
 import { useSavedPlacesStore } from '@/store/savedPlaces';
 import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import CategoryPicker from "./CategoryPicker.vue"
+import TagInputModal from "./TagInput/TagInputModal.vue"
 
 export default defineComponent({
   setup () {
@@ -68,15 +74,21 @@ export default defineComponent({
       )
     })
 
+    const isCategoryPickerVisible = ref(false)
+    const isTaggerVisible = ref(false)
+
     return {
       savePlaceDialogStore,
       savedPlacesStore,
       savedPlace,
-      tagOptionLabel
+      tagOptionLabel,
+      isCategoryPickerVisible,
+      isTaggerVisible
     }
   },
   components: {
-    CategoryPicker
+    CategoryPicker,
+    TagInputModal
   }
 })
 </script>
