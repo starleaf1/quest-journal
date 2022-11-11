@@ -39,20 +39,33 @@
         </template>
         <TagInputModal @success="isTaggerVisible = false" />
       </v-dialog>
-      <v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title>Links &amp; social media</v-list-item-title>
-            <v-list-item-subtitle v-text="linksOptionLabel" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>Add more information</v-list-item-title>
-          <v-list-item-subtitle>Notes, social media, and web links</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
+      <v-dialog :fullscreen="!isOnPC" v-model="isLinksEditorVisible">
+        <template #activator="{ on }">
+          <v-list-item v-on="on">
+            <v-list-item-content>
+              <v-list-item-title>Links &amp; social media</v-list-item-title>
+              <v-list-item-subtitle v-text="linksOptionLabel" />
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <SocialMediaEditWrapped
+          @click:close="isLinksEditorVisible = false"
+          @success="isLinksEditorVisible = false"
+        />
+      </v-dialog>
+      <v-dialog :fullscreen="!isOnPC" v-model="isNotesEditorVisible">
+        <template #activator="{ on }">
+          <v-list-item v-on="on">
+            <v-list-item-content>
+              Notes
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <NoteEditor
+          @success="isNotesEditorVisible = false"
+          @click:close="isNotesEditorVisible = false"
+        />
+      </v-dialog>
     </v-list>
   </v-bottom-sheet>
 </template>
@@ -63,6 +76,8 @@ import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
 import { defineComponent, computed, ref } from 'vue';
 import CategoryPicker from "./CategoryPicker.vue"
 import TagInputModal from "./TagInput/TagInputModal.vue"
+import NoteEditor from "./NoteEditor.vue"
+import SocialMediaEditWrapped from "../SocialMedia/SocialMediaEdit/SocialMediaEditWrapped.vue"
 
 export default defineComponent({
   setup () {
@@ -92,6 +107,8 @@ export default defineComponent({
 
     const isCategoryPickerVisible = ref(false)
     const isTaggerVisible = ref(false)
+    const isNotesEditorVisible = ref(false)
+    const isLinksEditorVisible = ref(false)
 
     return {
       savePlaceDialogStore,
@@ -100,12 +117,16 @@ export default defineComponent({
       tagOptionLabel,
       isCategoryPickerVisible,
       isTaggerVisible,
-      linksOptionLabel
+      linksOptionLabel,
+      isNotesEditorVisible,
+      isLinksEditorVisible
     }
   },
   components: {
     CategoryPicker,
-    TagInputModal
+    TagInputModal,
+    NoteEditor,
+    SocialMediaEditWrapped
   }
 })
 </script>
