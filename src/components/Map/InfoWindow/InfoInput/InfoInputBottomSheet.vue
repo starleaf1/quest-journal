@@ -40,6 +40,14 @@
         <TagInputModal @success="isTaggerVisible = false" />
       </v-dialog>
       <v-list-item>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title>Links &amp; social media</v-list-item-title>
+            <v-list-item-subtitle v-text="linksOptionLabel" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item>
+      <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Add more information</v-list-item-title>
           <v-list-item-subtitle>Notes, social media, and web links</v-list-item-subtitle>
@@ -70,8 +78,16 @@ export default defineComponent({
       return (
         savedPlace.value?.tags?.length <= 3 ?
         savedPlace.value?.tags?.join(', ') : 
-        `${savedPlace.value?.tags?.slice(0, 2)}, +${savedPlace.value?.tags?.length - 2} more`
+        `${savedPlace.value?.tags?.slice(0, 2).join(', ')}, +${savedPlace.value?.tags?.length - 2} more`
       )
+    })
+
+    const linksOptionLabel = computed(() => {
+      const noLinks = savedPlace.value?.socialMedia?.length
+      if (!noLinks) return 'Add links to websites and social media pages'
+      const linkTypes = savedPlace.value?.socialMedia.map?.(link => link.name)
+      const label = `${linkTypes.slice(0, -1).join(', ')}${linkTypes.length > 1 ? ` & ${linkTypes.slice(-1)}` : ''}`
+      return `${noLinks} links, including ${label}`
     })
 
     const isCategoryPickerVisible = ref(false)
@@ -83,7 +99,8 @@ export default defineComponent({
       savedPlace,
       tagOptionLabel,
       isCategoryPickerVisible,
-      isTaggerVisible
+      isTaggerVisible,
+      linksOptionLabel
     }
   },
   components: {
