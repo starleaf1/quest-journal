@@ -6,7 +6,7 @@
         v-model="selectedCategory"
         :items="categoriesStore.categories"
         item-text="category"
-        item-value="id"
+        item-value="category"
         label="List"
         clearable
       >
