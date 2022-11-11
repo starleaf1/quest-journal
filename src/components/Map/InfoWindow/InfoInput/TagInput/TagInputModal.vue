@@ -7,10 +7,9 @@ import TagInput from './'
 export default defineComponent({
   name: "TagInputModal",
   setup(props, { emit }) {
-    const picked = ref([])
-
     const savedPlacesStore = useSavedPlacesStore()
     const savePlaceDialogStore = useSavePlaceDialogStore()
+    const picked = ref(savedPlacesStore.findById(savePlaceDialogStore.placeId)?.tags ?? [])
 
     const isSubmitting = ref(false)
 
