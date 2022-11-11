@@ -83,6 +83,10 @@
         </template>
       </v-toolbar>
       <v-card-title>{{ place?.name }}</v-card-title>
+      <v-card-subtitle>
+        <v-icon x-small left :color="categoryValue?.color ?? 'black'">mdi-circle</v-icon>
+        <span>{{ categoryValue?.category ?? 'Uncategorized' }}</span>
+      </v-card-subtitle>
       <InfoWindowLoadingSkeleton v-if="loading" />
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
@@ -93,12 +97,18 @@
           :business-status="placeData?.business_status"
         />
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="my-6" />
-        <v-textarea :disabled="isSubmitting" class="mt-2" v-model="noteValue" outlined label="My notes" />
-        <div class="d-sm-flex align-center">
-          <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
-          <ColorInput class="ml-sm-4" :disabled="isSubmitting" v-model="categoryValue" />
+        <div v-if="placeData?.notes?.length">
+          <h3 class="text-h7">My notes</h3>
+          <p class="text-body-1" v-text="placeData?.notes" />
         </div>
-        <SocialMedia v-model="socialMedia" />
+        <div class="mt-2" v-if="placeData?.socialMedia?.length">
+          <h3 class="text-h7 mb-1">Links &amp; social media</h3>
+          <SocialMediaLink
+            v-for="link in socialMedia"
+            :key="link.url"
+            v-bind="link"
+          />
+        </div>
       </v-card-text>
     </v-sheet>
   </v-dialog>
@@ -111,9 +121,7 @@ import { useSavedPlacesStore } from '@/store/savedPlaces';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
-import TagInput from './InfoInput/TagInput/index.vue';
-import ColorInput from './ColorGrouping/ColorInput.vue';
-import SocialMedia from './SocialMedia/index.vue'
+import SocialMediaLink from './SocialMedia/SocialMediaLink.vue'
 import InfoWindowMenu from './InfoWindowMenu.vue'
 import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
 import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
@@ -232,9 +240,7 @@ export default {
   components: {
     OpeningHours,
     PhotoGallery,
-    TagInput,
-    ColorInput,
-    SocialMedia,
+    SocialMediaLink,
     InfoWindowMenu,
     InfoWindowLoadingSkeleton,
     InfoInputBottomSheet
