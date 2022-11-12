@@ -1,5 +1,5 @@
 <template>
-  <v-list-group :value="true">
+  <v-list-group :value="false">
     <template #activator>
       <v-list-item-title>
         {{ category.name }}
