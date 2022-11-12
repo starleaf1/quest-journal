@@ -4,6 +4,7 @@
     :value="open"
     @click:outside="handleCloseDialog"
   >
+    <InfoInputBottomSheet />
     <v-sheet class="pb-10" min-height="100vh" width="100%">
       <v-toolbar dense color="primary" dark>
         <v-btn icon @click="handleCloseDialog">
@@ -12,7 +13,7 @@
         <v-toolbar-title class="text-h6 pb-0">Details</v-toolbar-title>
         <v-spacer />
         <v-toolbar-items>
-          <v-tooltip bottom>
+          <v-tooltip v-if="!isPlaceSaved" bottom>
             <span>Add to collection</span>
             <template #activator="{ on: tooltip }">
               <v-btn
@@ -22,7 +23,7 @@
                 :loading="isSubmitting"
                 @click="savePlace"
               >
-                Save
+                Add to collection
               </v-btn>
               <v-btn
                 v-else
@@ -31,7 +32,30 @@
                 :loading="isSubmitting"
                 @click="savePlace"
               >
-                <v-icon>mdi-star</v-icon>
+                <v-icon>mdi-star-plus</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip v-else bottom>
+            <span>Change list, tags, notes, links</span>
+            <template #activator="{ on: tooltip }">
+              <v-btn
+                v-if="isOnPC"
+                v-on="{ ...tooltip }"
+                text
+                :loading="isSubmitting"
+                @click="openSaveDialog(place?.place_id)"
+              >
+                Change Details
+              </v-btn>
+              <v-btn
+                v-else
+                v-on="{ ...tooltip }"
+                icon
+                :loading="isSubmitting"
+                @click="openSaveDialog(place?.place_id)"
+              >
+                <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
           </v-tooltip>
@@ -59,6 +83,10 @@
         </template>
       </v-toolbar>
       <v-card-title>{{ place?.name }}</v-card-title>
+      <v-card-subtitle v-if="isPlaceSaved">
+        <v-icon x-small left :color="categoryValue?.color ?? 'black'">mdi-circle</v-icon>
+        <span>{{ categoryValue?.category ?? 'Uncategorized' }}</span>
+      </v-card-subtitle>
       <InfoWindowLoadingSkeleton v-if="loading" />
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
@@ -69,39 +97,19 @@
           :business-status="placeData?.business_status"
         />
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="my-6" />
-        <v-textarea :disabled="isSubmitting" class="mt-2" v-model="noteValue" outlined label="My notes" />
-        <div class="d-sm-flex align-center">
-          <TagInput class="mr-4" :disabled="isSubmitting" v-model="tagsValue" />
-          <ColorInput class="ml-sm-4" :disabled="isSubmitting" v-model="categoryValue" />
+        <div v-if="placeData?.notes?.length">
+          <h3 class="text-h7">My notes</h3>
+          <p class="text-body-1" v-text="placeData?.notes" />
         </div>
-        <SocialMedia v-model="socialMedia" />
+        <div class="mt-2" v-if="placeData?.socialMedia?.length">
+          <h3 class="text-h7 mb-1">Links &amp; social media</h3>
+          <SocialMediaLink
+            v-for="link in socialMedia"
+            :key="link.url"
+            v-bind="link"
+          />
+        </div>
       </v-card-text>
-      <div v-if="isPlaceSaved" class="d-flex justify-center align-center">
-        <v-dialog>
-          <template #activator="{ on: dialog }">
-            <v-btn v-on="dialog" color="error">
-              <v-icon left>mdi-delete</v-icon>
-              <span>Delete</span>
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>Delete place</v-card-title>
-            <v-card-text>
-              Do you want to remove this place from your saved places list?
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                @click="handleDeleteButtonClick"
-                text
-                color="error"
-              >
-                Delete
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
     </v-sheet>
   </v-dialog>
 </template>
@@ -113,11 +121,11 @@ import { useSavedPlacesStore } from '@/store/savedPlaces';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
-import TagInput from './InfoInput/TagInput/index.vue';
-import ColorInput from './ColorGrouping/ColorInput.vue';
-import SocialMedia from './SocialMedia/index.vue'
+import SocialMediaLink from './SocialMedia/SocialMediaLink.vue'
 import InfoWindowMenu from './InfoWindowMenu.vue'
 import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
+import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
+import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -167,6 +175,7 @@ export default {
   methods: {
     ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
     ...mapActions(useSavedPlacesStore, ['append', 'remove']),
+    ...mapActions(useSavePlaceDialogStore, ['openSaveDialog', 'closeSaveDialog']),
 
     populateInputs () {
       console.log('[info-window] Triggering population input...', this.$data.socialMedia)
@@ -178,7 +187,6 @@ export default {
           this.placeData?.category === category.category
         )
       )
-      console.log('[info-window] After triggering.', this.$data.socialMedia)
     },
 
     handleCloseDialog() {
@@ -206,6 +214,7 @@ export default {
           category: this.$data.categoryValue,
           socialMedia: this.$data.socialMedia
         })
+        this.openSaveDialog(this.place?.place_id)
       } catch (e) {
         console.error('[info-window]', e)
       } finally {
@@ -225,22 +234,16 @@ export default {
       this.getPlaceDetails(v?.place_id);
     },
     placeData () {
-      console.log('[info-window-debug] place-data', this.placeData)
       this.populateInputs()
-    },
-    socialMedia (v, o) {
-      console.log('[info-window-debug] socialMedia current value', v)
-      console.log('[info-window-debug] socialMedia old value', o)
     }
   },
   components: {
     OpeningHours,
     PhotoGallery,
-    TagInput,
-    ColorInput,
-    SocialMedia,
+    SocialMediaLink,
     InfoWindowMenu,
-    InfoWindowLoadingSkeleton
+    InfoWindowLoadingSkeleton,
+    InfoInputBottomSheet
   }
 }
 </script>

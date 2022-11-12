@@ -7,7 +7,7 @@
         :headers="headers"
       >
         <template #[`item.color`]="{ item }">
-          <v-chip :color="item.color">&nbsp;</v-chip>
+          <v-icon :color="item.color">mdi-circle</v-icon>
         </template>
         <template #[`item.category`]="{ item }">
           {{ item.category }}
@@ -22,7 +22,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn @click="handleCloseClick" text color="primary">OK</v-btn>
+      <v-btn @click="handleCloseClick" color="primary">Done</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -32,31 +32,31 @@ import { useCategoriesStore } from '@/store/categoriesStore'
 import { mapActions, mapState } from 'pinia'
 import ColorEditor from './ColorEditor.vue'
 export default {
-    name: "ColorManager",
-    computed: {
-        ...mapState(useCategoriesStore, ["categories"]),
-    },
-    methods: {
-        ...mapActions(useCategoriesStore, ["modify"]),
-        handleCloseClick() {
-            this.$emit("close");
+  name: "ColorManager",
+  computed: {
+    ...mapState(useCategoriesStore, ["categories"]),
+  },
+  methods: {
+    ...mapActions(useCategoriesStore, ["modify"]),
+    handleCloseClick() {
+      this.$emit("click:close");
+    }
+  },
+  data() {
+    return {
+      headers: [
+        {
+          value: "color",
+          text: "Color",
+          filterable: false,
+        },
+        {
+          value: "category",
+          text: "Category"
         }
-    },
-    data() {
-        return {
-            headers: [
-                {
-                    value: "color",
-                    text: "Color",
-                    filterable: false,
-                },
-                {
-                    value: "category",
-                    text: "Category"
-                }
-            ]
-        };
-    },
-    components: { ColorEditor }
+      ]
+    };
+  },
+  components: { ColorEditor }
 }
 </script>

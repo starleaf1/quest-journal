@@ -6,6 +6,7 @@ import {
   GeoPoint,
   onSnapshot,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -14,8 +15,9 @@ import { useAuthStore } from "./authStore";
 export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
   const authStore = useAuthStore();
 
-  const savedPlaces = ref([]);
   const colRef = collection(db, `userData/${authStore.uid}/places`);
+
+  const savedPlaces = ref([]);
   const unsubscribe = onSnapshot(colRef, (colSnap) => {
     savedPlaces.value = colSnap.docs.map((doc) => ({
       id: doc.id,
@@ -30,6 +32,11 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
       },
     }));
   });
+
+  async function patch(placeId, data) {
+    const docRef = doc(colRef, placeId)
+    await updateDoc(docRef, data)
+  }
 
   async function append({
     place_id,
@@ -71,7 +78,7 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
     await setDoc(docRef, toBeSaved);
   }
 
-  async function findById(id) {
+  function findById(id) {
     return savedPlaces.value.find((place) => place.place_id === id);
   }
 
@@ -80,5 +87,5 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
     await deleteDoc(docRef);
   }
 
-  return { savedPlaces, append, remove, unsubscribe, findById };
+  return { savedPlaces, append, remove, unsubscribe, findById, patch };
 });
