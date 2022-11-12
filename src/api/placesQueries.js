@@ -15,6 +15,8 @@ export const getPlaceDetails = (
     "formatted_phone_number",
     "opening_hours",
     "photo",
+    "price_level",
+    "rating",
     "utc_offset_minutes",
     "type",
     "url"
