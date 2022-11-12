@@ -83,7 +83,7 @@
         </template>
       </v-toolbar>
       <v-card-title>{{ place?.name }}</v-card-title>
-      <v-card-subtitle>
+      <v-card-subtitle v-if="isPlaceSaved">
         <v-icon x-small left :color="categoryValue?.color ?? 'black'">mdi-circle</v-icon>
         <span>{{ categoryValue?.category ?? 'Uncategorized' }}</span>
       </v-card-subtitle>

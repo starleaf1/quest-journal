@@ -28,6 +28,13 @@
           <v-btn text v-on="on">Manage</v-btn>
         </template>
       </v-dialog>
+      <v-spacer />
+      <v-btn
+        text
+        @click="handleCancelClick"
+      >
+        Cancel
+      </v-btn>
       <v-btn
         color="primary"
         :loading="isSubmitting"
@@ -57,6 +64,10 @@ export default defineComponent({
     const emitCategory = () => {
       emit('input', selectedCategory.value.length ? selectedCategory.value : null)
     }
+    const handleCancelClick = () => {
+      selectedCategory.value = placeDetailsDisplayStore.inspectedPlace.category
+      emit('click:cancel')
+    }
 
     const colorManagerOpen = ref(false)
     const isSubmitting = ref(false)
@@ -80,7 +91,8 @@ export default defineComponent({
       placeDetailsDisplayStore,
       colorManagerOpen,
       isSubmitting,
-      handleSubmit
+      handleSubmit,
+      handleCancelClick
     }
   },
   components: {

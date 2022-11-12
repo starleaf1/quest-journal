@@ -12,6 +12,7 @@ export default defineComponent({
     const notesValue = ref(savedPlacesStore.findById(savePlaceDialogStore.placeId)?.notes ?? '')
 
     const handleCloseDialogClick = () => {
+      notesValue.value = savedPlacesStore.findById(savePlaceDialogStore.placeId)?.notes ?? ''
       emit('click:close')
     }
     const handleSaveButtonClick = async () => {

@@ -13,10 +13,14 @@ export default defineComponent({
 
     const socialMedia = ref(savedPlacesStore.findById(savePlaceDialogStore.placeId)?.socialMedia ?? [])
 
+    const socialMediaInputElement = ref(null)
+
     const handleSaveButtonClick = async () => {
       try {
         isLoading.value = true
+        socialMedia.value = socialMedia.value.filter(link => link.url.length)
         await savedPlacesStore.patch(savePlaceDialogStore.placeId, { socialMedia: socialMedia.value })
+        socialMediaInputElement.value.reset()
         emit('success')
       } catch(e) {
         emit('error', e)
@@ -26,10 +30,12 @@ export default defineComponent({
     }
 
     const handleCloseButtonClick = () => {
+      socialMedia.value = savedPlacesStore.findById(savePlaceDialogStore.placeId)?.socialMedia ?? []
+      socialMediaInputElement.value.reset()
       emit('click:close')
     }
 
-    return { socialMedia, isLoading, handleSaveButtonClick, handleCloseButtonClick }
+    return { socialMedia, isLoading, handleSaveButtonClick, handleCloseButtonClick, socialMediaInputElement }
   },
   components: {
     SocialMediaInput
@@ -50,7 +56,10 @@ export default defineComponent({
       <v-btn v-else :loading="isLoading" icon @click="handleSaveButtonClick"><v-icon>mdi-check</v-icon></v-btn>
     </v-toolbar>
     <div class="pa-4">
-      <SocialMediaInput v-model="socialMedia" />
+      <SocialMediaInput
+        ref="socialMediaInputElement"
+        v-model="socialMedia"
+      />
     </div>
   </v-sheet>
 </template>

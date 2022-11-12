@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { useSavedPlacesStore } from '@/store/savedPlaces'
+import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
 import { defineComponent, ref, watchEffect } from 'vue'
 import SocialMediaInput from './SocialMediaInput.vue'
 
@@ -32,10 +34,10 @@ export default defineComponent({
       default: () => []
     }
   },
-  setup(
-    props, { emit }
-  ) {
+  setup(props, { emit }) {
     const internal = ref(props.value)
+    const savePlaceDialogStore = useSavePlaceDialogStore()
+    const savedPlacesStore = useSavedPlacesStore()
     
     watchEffect(() => {
       emit('input', internal.value)
@@ -54,9 +56,13 @@ export default defineComponent({
       internal.value.splice(i, 1)
     }
 
+    const reset = () => {
+      internal.value = savedPlacesStore.findById(savePlaceDialogStore.placeId)?.socialMedia
+    }
+
     return {
       internal,
-      // emitValue,
+      reset,
       newLink,
       deleteLink
     }

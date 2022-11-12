@@ -24,7 +24,12 @@ export default defineComponent({
         isSubmitting.value = false
       }
     }
-    return { picked, handleSubmitClicked, isSubmitting }
+    const handleCloseClicked = () => {
+      picked.value = savedPlacesStore.findById(savePlaceDialogStore.placeId)?.tags ?? []
+      emit('click:close')
+    }
+
+    return { picked, handleSubmitClicked, handleCloseClicked, isSubmitting }
   },
   components: {
     TagInput
@@ -39,6 +44,10 @@ export default defineComponent({
       <TagInput v-model="picked" />
     </v-card-text>
     <v-card-actions class="justify-end">
+      <v-btn
+        text
+        @click="handleCloseClicked"
+      >Cancel</v-btn>
       <v-btn
         color="primary"
         @click="handleSubmitClicked"
