@@ -91,10 +91,15 @@
       <v-card-text v-else>
         <p class="text-body2">{{placeData?.formatted_address}}</p>
         <OpeningHours
-          class="mb-2"
+          class="mb-2 mr-2"
           v-if="placeData?.opening_hours"
           :opening-hours="placeData?.opening_hours"
           :business-status="placeData?.business_status"
+        />
+        <ReviewStarsChip
+          v-if="placeData?.rating"
+          :rating="placeData?.rating"
+          :number-of-reviews="placeData?.user_ratings_total"
         />
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="my-6" />
         <div v-if="placeData?.notes?.length">
@@ -126,6 +131,7 @@ import InfoWindowMenu from './InfoWindowMenu.vue'
 import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
 import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
 import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore';
+import ReviewStarsChip from './ReviewStarsChip.vue';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -243,7 +249,8 @@ export default {
     SocialMediaLink,
     InfoWindowMenu,
     InfoWindowLoadingSkeleton,
-    InfoInputBottomSheet
+    InfoInputBottomSheet,
+    ReviewStarsChip,
   }
 }
 </script>
