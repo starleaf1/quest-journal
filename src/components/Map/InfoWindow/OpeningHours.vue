@@ -1,20 +1,22 @@
 <template>
-  <v-tooltip top>
-    <fragment v-if="chipColor !== 'danger'">
-      <div
-        v-for="day in openingHours.weekday_text"
-        :key="day"
-      >
-        {{day}}
-      </div>
-    </fragment>
-    <div v-else>This place is permanently closed</div>
-    <template #activator="{ on, attrs }">
-      <v-chip :color="chipColor" v-bind="attrs" v-on="on">
-        {{isOpen ? 'Currently open' : 'Currently closed'}}
-      </v-chip>
-    </template>
-  </v-tooltip>
+  <div class="d-inline-block">
+    <v-tooltip top>
+      <fragment v-if="chipColor !== 'danger'">
+        <div
+          v-for="day in openingHours.weekday_text"
+          :key="day"
+        >
+          {{day}}
+        </div>
+      </fragment>
+      <div v-else>This place is permanently closed</div>
+      <template #activator="{ on, attrs }">
+        <v-chip :color="chipColor" v-bind="attrs" v-on="on">
+          {{isOpen ? 'Currently open' : 'Currently closed'}}
+        </v-chip>
+      </template>
+    </v-tooltip>
+  </div>
 </template>
 
 <script>
@@ -50,6 +52,7 @@ export default {
     isOpen () {
       return this.openingHours.isOpen()
     }
-  }
+  },
+  inheritAttrs: false
 }
 </script>
