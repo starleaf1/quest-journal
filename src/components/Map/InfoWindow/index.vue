@@ -114,6 +114,19 @@
             v-bind="link"
           />
         </div>
+        <div class="mt-4" v-if="tagsValue?.length">
+          <h3 class="text-h7">Tags</h3>
+          <v-chip-group column class="mt-4">
+            <v-chip
+              v-for="tag in tagsValue"
+              :key="tag"
+              color="primary"
+              outlined
+              link
+              v-text="tag"
+            />
+          </v-chip-group>
+        </div>
       </v-card-text>
     </v-sheet>
   </v-dialog>
