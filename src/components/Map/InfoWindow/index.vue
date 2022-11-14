@@ -116,7 +116,7 @@
         </div>
         <div class="mt-4" v-if="tagsValue?.length">
           <h3 class="text-h7">Tags</h3>
-          <v-chip-group column class="mt-4">
+          <v-chip-group column>
             <v-chip
               v-for="tag in tagsValue"
               :key="tag"
