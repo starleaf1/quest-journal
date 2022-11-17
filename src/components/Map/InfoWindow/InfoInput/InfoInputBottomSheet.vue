@@ -63,9 +63,10 @@
       </v-dialog>
       <v-dialog :fullscreen="!isOnPC" v-model="isNotesEditorVisible">
         <template #activator="{ on }">
-          <v-list-item v-on="on">
+          <v-list-item two-line v-on="on">
             <v-list-item-content>
-              Notes
+              <v-list-item-title>Notes</v-list-item-title>
+              <v-list-item-subtitle v-text="savedPlace.notes" />
             </v-list-item-content>
           </v-list-item>
         </template>
