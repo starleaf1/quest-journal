@@ -29,6 +29,7 @@
         <CategoryPicker
           @success="isCategoryPickerVisible = false"
           @click:cancel="isCategoryPickerVisible = false"
+          :key="`${savePlaceDialogStore.placeId}-category-editor`"
         />
       </v-dialog>
       <v-dialog v-model="isTaggerVisible">
@@ -40,7 +41,11 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-        <TagInputModal @click:close="isTaggerVisible = false" @success="isTaggerVisible = false" />
+        <TagInputModal
+          @click:close="isTaggerVisible = false"
+          @success="isTaggerVisible = false"
+          :key="`${savePlaceDialogStore.placeId}-tag-editor`"
+        />
       </v-dialog>
       <v-dialog :fullscreen="!isOnPC" v-model="isLinksEditorVisible">
         <template #activator="{ on }">
@@ -65,6 +70,7 @@
           </v-list-item>
         </template>
         <NoteEditor
+          :key="`${savePlaceDialogStore.placeId}-note-editor`"
           @success="isNotesEditorVisible = false"
           @click:close="isNotesEditorVisible = false"
         />
