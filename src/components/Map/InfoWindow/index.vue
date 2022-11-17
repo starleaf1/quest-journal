@@ -180,7 +180,9 @@ export default {
       return !!this.extraSavedData
     },
     sanitizedNotes () {
-      return sanitizeHtml(this.placeData?.notes ?? '', {
+      const lineBroke = this.placeData?.notes.replace(/(?:\r\n|\r|\n)/g, '<br />')
+      if (!lineBroke) return null
+      return sanitizeHtml(lineBroke, {
         allowedTags: ['br', 'p']
       })
     }
