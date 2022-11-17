@@ -104,7 +104,7 @@
         <PhotoGallery v-if="placeData?.photos" :images="placeData?.photos" class="my-6" />
         <div v-if="placeData?.notes?.length">
           <h3 class="text-h7">My notes</h3>
-          <p class="text-body-1" v-text="placeData?.notes" />
+          <div class="text-body-1" v-html="sanitizedNotes" />
         </div>
         <div class="mt-2" v-if="placeData?.socialMedia?.length">
           <h3 class="text-h7 mb-1">Links &amp; social media</h3>
@@ -143,8 +143,9 @@ import SocialMediaLink from './SocialMedia/SocialMediaLink.vue'
 import InfoWindowMenu from './InfoWindowMenu.vue'
 import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
 import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
-import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore';
-import ReviewStarsChip from './ReviewStarsChip.vue';
+import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
+import ReviewStarsChip from './ReviewStarsChip.vue'
+import sanitizeHtml from 'sanitize-html'
 
 export default {
   name: "PlaceDetailsDialog",
@@ -177,6 +178,11 @@ export default {
     },
     isPlaceSaved () {
       return !!this.extraSavedData
+    },
+    sanitizedNotes () {
+      return sanitizeHtml(this.placeData?.notes ?? '', {
+        allowedTags: ['br', 'p']
+      })
     }
   },
   data() {
