@@ -23,7 +23,6 @@ export default {
     ...mapActions(useAuthStore, ['storeAuthData', 'clearAuthData']),
   },
   mounted () {
-
     onAuthStateChanged(this.$firebase.auth, user => {
       if (user) {
         this.storeAuthData(user)
