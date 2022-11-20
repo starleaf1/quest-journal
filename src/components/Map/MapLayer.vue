@@ -19,12 +19,14 @@
       :place="markedPlaceInfo"
       @click:marker="showInfoWindow"
     />
+    <PositionMarker />
     <InfoWindow
       :place="inspectedPlace"
       :open="infoWindowOpen"
       @click:outside="hideInfoWindow"
     />
     <SavedPlacesLayer @click:marker="showInfoWindow" />
+    <CenterToMe />
   </l-map>
 </template>
 
@@ -41,6 +43,9 @@ import PrimaryCoordinates from "./PrimaryCoordinates"
 import { useMapStateStore } from '@/store/mapState'
 import { useSearchResultStore } from '@/store/searchResult'
 import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateStore'
+import { useGeolocationStore } from '@/store/geolocation'
+import PositionMarker from './PositionMarker.vue'
+import CenterToMe from './Controls/CenterToMe.vue'
 
 export default {
   name: "MapLayer",
@@ -69,6 +74,7 @@ export default {
   methods: {
     ...mapActions(useMapStateStore, ['setBounds']),
     ...mapActions(usePlaceDetailWindowStateStore, ['showInfoWindow', 'hideInfoWindow']),
+    ...mapActions(useGeolocationStore, ['beginWatching']),
     handlePanOrder ({ lat, lng, zoom }) {
       this.$refs.primaryMap.mapObject.setView({ lat, lng }, zoom, {
         animate: true,
@@ -96,6 +102,9 @@ export default {
         },
         name
       })
+    },
+    handleMapReady() {
+      this.beginWatching()
     }
   },
   mounted() {
@@ -103,6 +112,14 @@ export default {
       this.$refs.primaryMap.mapObject.invalidateSize();
     });
   },
-  components: { InfoWindow, MarkerGroup, SavedPlacesLayer, SearchResultsLayer, PrimaryCoordinates }
+  components: {
+    InfoWindow,
+    MarkerGroup,
+    SavedPlacesLayer,
+    SearchResultsLayer,
+    PrimaryCoordinates,
+    PositionMarker,
+    CenterToMe
+  }
 }
 </script>
