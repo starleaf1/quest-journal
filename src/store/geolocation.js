@@ -1,6 +1,7 @@
-import { defineStore, ref } from "pinia";
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const geolocationStore = defineStore('GeolocationStore', () => {
+export const useGeolocationStore = defineStore('GeolocationStore', () => {
   const watcher = ref()
   const currentPos = ref(null)
 
