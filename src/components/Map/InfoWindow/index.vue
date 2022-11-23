@@ -14,7 +14,7 @@
         <v-spacer />
         <v-toolbar-items>
           <v-tooltip v-if="!isPlaceSaved" bottom>
-            <span>Add to collection</span>
+            <span>Add to wishlist</span>
             <template #activator="{ on: tooltip }">
               <v-btn
                 v-if="isOnPC"
@@ -23,7 +23,7 @@
                 :loading="isSubmitting"
                 @click="savePlace"
               >
-                Add to collection
+                Add to wishlist
               </v-btn>
               <v-btn
                 v-else
@@ -32,7 +32,7 @@
                 :loading="isSubmitting"
                 @click="savePlace"
               >
-                <v-icon>mdi-star-plus</v-icon>
+                <v-icon>mdi-heart</v-icon>
               </v-btn>
             </template>
           </v-tooltip>
@@ -46,7 +46,7 @@
                 :loading="isSubmitting"
                 @click="openSaveDialog(place?.place_id)"
               >
-                Change Details
+                Change details
               </v-btn>
               <v-btn
                 v-else
