@@ -97,7 +97,7 @@
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn v-if="!isDeletingPlace" text @click="isDeleteConfirmationOpen = false">No, cancel</v-btn>
-            <v-btn :loading="isDeletingPlace" color="error">Yes, delete</v-btn>
+            <v-btn @click="deletePlace" :loading="isDeletingPlace" color="error">Yes, delete</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
