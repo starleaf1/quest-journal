@@ -144,6 +144,7 @@ export default defineComponent({
       try {
         isDeletingPlace.value = true
         await savedPlacesStore.remove(savePlaceDialogStore.placeId)
+        savePlaceDialogStore.closeSaveDialog()
       } catch (e) {
         console.error
       } finally {
