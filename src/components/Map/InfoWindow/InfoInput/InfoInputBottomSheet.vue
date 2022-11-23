@@ -1,7 +1,7 @@
 <template>
   <v-bottom-sheet v-model="savePlaceDialogStore.isSaveDialogOpen">
     <v-toolbar flat>
-      <v-toolbar-title>Saved to favorites</v-toolbar-title>
+      <v-toolbar-title>Saved to wishlist</v-toolbar-title>
       <v-spacer />
       <v-btn
         color="primary"
