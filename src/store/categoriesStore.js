@@ -39,8 +39,13 @@ export const useCategoriesStore = defineStore("categoriesStore", () => {
 
   const findAllMembers = (keyword) => {
     const savedPlaces = savedPlacesStore.savedPlaces;
-    const members = savedPlaces.filter((place) => place.category === keyword);
-    return members;
+    const members = savedPlaces.filter((place) => {
+      if (keyword === null) {
+        return place.category === undefined || place.category === null
+      }
+      return place.category === keyword
+    })
+    return members
   };
 
   return { categories, unsubscribe, add, modify, findAllMembers };
