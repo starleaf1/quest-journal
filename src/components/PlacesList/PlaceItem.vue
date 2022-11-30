@@ -1,13 +1,13 @@
 <template>
   <v-list-item
     three-line
-    @click="showInfoWindow(place)"
+    @click="handleMapSearchClick(place)"
   >
     <v-list-item-content>
       <v-list-item-title>{{place.name}}</v-list-item-title>
       <v-list-item-subtitle>{{place.formatted_address}}</v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-action>
+    <!-- <v-list-item-action>
       <v-btn
         icon
         color="primary"
@@ -15,7 +15,7 @@
       >
         <v-icon>mdi-map-search</v-icon>
       </v-btn>
-    </v-list-item-action>
+    </v-list-item-action> -->
   </v-list-item>
 </template>
 
