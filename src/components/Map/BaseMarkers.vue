@@ -10,7 +10,10 @@
 </template>
 
 <script>
-import FormattedMarker from './FormattedMarker.vue';
+import FormattedMarker from './FormattedMarker.vue'
+import { mapActions } from 'pinia'
+import { useComponentCommunicator } from '@/store/componentCommunicator'
+
 export default {
   name: "BaseMarkers",
   props: {
@@ -20,7 +23,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useComponentCommunicator, ['clearMarkedPlace']),
     handleClick(place) {
+      this.clearMarkedPlace()
       this.$emit('click:marker', place)
     }
   },

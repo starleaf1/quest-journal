@@ -36,7 +36,7 @@ export default {
   methods: {
     ...mapActions(useCategoriesStore, ['findAllMembers']),
     repopulatePlaces () {
-      const categoryName = this.categories.find(category => category.id === this.color)?.category
+      const categoryName = this.categories.find(category => category.id === this.color)?.category ?? null
       this.$data.places = this.findAllMembers(categoryName)
     },
     handleClickMarker(e) {
@@ -50,7 +50,6 @@ export default {
     savedPlaces: {
       immediate: true,
       handler () {
-        console.debug('[color-grouping] Modification in savedPlaces. Repopulating...')
         this.repopulatePlaces()
       }
     }

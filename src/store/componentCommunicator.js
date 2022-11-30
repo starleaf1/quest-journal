@@ -16,6 +16,14 @@ export const useComponentCommunicator = defineStore('componentCommunicator', () 
     const lng = typeof place.geometry.location.lng === 'function' ? place.geometry.location.lng() : place.geometry.location.lng
     placeMarkerCoordinates.value = { lat, lng, zoom: 16 }
   }
+  const clearMarkedPlace = () => { markedPlaceInfo.value = {}}
 
-  return { orderMapPan, mapPanOrder, markPlace, placeMarkerCoordinates, markedPlaceInfo }
+  return {
+    orderMapPan,
+    mapPanOrder,
+    markPlace,
+    placeMarkerCoordinates,
+    markedPlaceInfo,
+    clearMarkedPlace
+  }
 })

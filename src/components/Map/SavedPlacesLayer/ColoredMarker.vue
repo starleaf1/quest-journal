@@ -8,6 +8,8 @@
 
 <script>
 import L from "leaflet"
+import { mapActions } from 'pinia'
+import { useComponentCommunicator } from '@/store/componentCommunicator'
 
 export default {
   name: 'ColoredMarker',
@@ -28,7 +30,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useComponentCommunicator, ['clearMarkedPlace']),
     handleClick () {
+      this.clearMarkedPlace()
       this.$emit('click', this.place)
     }
   }
