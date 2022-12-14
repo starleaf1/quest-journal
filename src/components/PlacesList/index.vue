@@ -60,7 +60,7 @@ export default {
   name: "PlacesList",
   computed: {
     ...mapState(useTagsStore, ["tags"]),
-    ...mapState(useCategoriesStore, ["categories"]),
+    ...mapState(useCategoriesStore, ["categories", "categoriesInFilter"]),
     ...mapState(useSavedPlacesStore, ["savedPlaces"]),
     displayedCategories() {
       const o = this.categories.map(category => ({
@@ -93,9 +93,13 @@ export default {
       this.markPlace({ ...place.geometry.location });
     },
     handleCategoryOpenChanged(input) {
+      const tmp = Array.from(this.categoriesInFilter)
       if (input.open) {
-        this.setCategoryFilter(input ? [input?.category.id] : [])
+        tmp.push(input.category?.id ?? null)
+      } else {
+        tmp.splice(tmp.indexOf(input.category?.id ?? null), 1)
       }
+      this.setCategoryFilter(tmp)
     }
   },
   components: { PlaceGroup }
