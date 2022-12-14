@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapState(useCategoriesStore, ['categories']),
     myCategory () {
-      return this.categories.find(v => this.category.name === v.category)
+      return this.categories.find(v => this.category.name === v.category) ?? null
     },
     myColor () {
       return this.myCategory?.color
