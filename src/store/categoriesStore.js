@@ -48,5 +48,18 @@ export const useCategoriesStore = defineStore("categoriesStore", () => {
     return members
   };
 
-  return { categories, unsubscribe, add, modify, findAllMembers };
+  const categoriesInFilter = ref([])
+  const setCategoryFilter = (items) => {
+    categoriesInFilter.value = items
+  }
+
+  return {
+    categories,
+    unsubscribe,
+    add,
+    modify,
+    findAllMembers,
+    categoriesInFilter,
+    setCategoryFilter
+  };
 });
