@@ -1,5 +1,5 @@
 <template>
-  <v-list-group :value="false">
+  <v-list-group v-model="open">
     <template #activator>
       <v-list-item-title>
         {{ category.name }}
@@ -31,10 +31,24 @@ export default {
   },
   computed: {
     ...mapState(useCategoriesStore, ['categories']),
+    myCategory () {
+      return this.categories.find(v => this.category.name === v.category)
+    },
     myColor () {
-      return this.categories.find(v => 
-        this.category.name === v.category
-      )?.color
+      return this.myCategory?.color
+    }
+  },
+  data () {
+    return ({
+      open: false
+    })
+  },
+  watch: {
+    open () {
+      this.$emit('change:open', {
+        open: this.$data.open,
+        category: this.myCategory
+      })
     }
   },
   components: { PlaceItem }

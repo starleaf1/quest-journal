@@ -42,6 +42,7 @@
         v-for="category in displayedCategories"
         :key="category.name"
         :category="category"
+        @change:open="handleCategoryOpenChanged"
       />
     </v-list>
   </fragment>
@@ -56,42 +57,47 @@ import { useCategoriesStore } from '@/store/categoriesStore'
 import PlaceGroup from './PlaceGroup.vue'
 
 export default {
-    name: "PlacesList",
-    computed: {
-      ...mapState(useTagsStore, ["tags"]),
-      ...mapState(useCategoriesStore, ["categories"]),
-      ...mapState(useSavedPlacesStore, ["savedPlaces"]),
-      displayedCategories() {
-        const o = this.categories.map(category => ({
-          name: category.category,
-          places: this.savedPlaces.filter(place => place.category === category.category)
-        }));
-        return [
-          ...o,
-          {
-            name: "Uncategorized",
-            places: this.savedPlaces.filter(place => (!place.category ||
-              !place.category.length))
-          }
-        ].filter(i => i.places.length > 0);
-      },
-      displayedPlaces() {
-        return this.savedPlaces.filter(() => true);
-      }
-    },
-    data() {
-        return ({
-            activeChips: []
-        });
-    },
-    methods: {
-        ...mapActions(useComponentCommunicator, ["orderMapPan", "markPlace"]),
-        handleMapSearchClick(place) {
-            console.debug("[place-list-find-place]", place);
-            this.orderMapPan({ ...place.geometry.location, zoom: 17 });
-            this.markPlace({ ...place.geometry.location });
+  name: "PlacesList",
+  computed: {
+    ...mapState(useTagsStore, ["tags"]),
+    ...mapState(useCategoriesStore, ["categories"]),
+    ...mapState(useSavedPlacesStore, ["savedPlaces"]),
+    displayedCategories() {
+      const o = this.categories.map(category => ({
+        name: category.category,
+        places: this.savedPlaces.filter(place => place.category === category.category)
+      }));
+      return [
+        ...o,
+        {
+          name: "Uncategorized",
+          places: this.savedPlaces.filter(place => (!place.category ||
+            !place.category.length))
         }
+      ].filter(i => i.places.length > 0);
     },
-    components: { PlaceGroup }
+    displayedPlaces() {
+      return this.savedPlaces.filter(() => true);
+    }
+  },
+  data() {
+    return ({
+      activeChips: []
+    });
+  },
+  methods: {
+    ...mapActions(useComponentCommunicator, ["orderMapPan", "markPlace"]),
+    ...mapActions(useCategoriesStore, ['setCategoryFilter']),
+    handleMapSearchClick(place) {
+      this.orderMapPan({ ...place.geometry.location, zoom: 17 });
+      this.markPlace({ ...place.geometry.location });
+    },
+    handleCategoryOpenChanged(input) {
+      if (input.open) {
+        this.setCategoryFilter(input ? [input?.category.id] : [])
+      }
+    }
+  },
+  components: { PlaceGroup }
 }
 </script>
