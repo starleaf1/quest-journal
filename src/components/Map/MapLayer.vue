@@ -27,6 +27,9 @@
     />
     <SavedPlacesLayer @click:marker="showInfoWindow" />
     <CenterToMe />
+    <v-expand-transition>
+      <FilterIndicator v-if="categoriesInFilter.length" />
+    </v-expand-transition>
   </l-map>
 </template>
 
@@ -46,6 +49,8 @@ import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateSt
 import { useGeolocationStore } from '@/store/geolocation'
 import PositionMarker from './PositionMarker.vue'
 import CenterToMe from './Controls/CenterToMe.vue'
+import { useCategoriesStore } from '@/store/categoriesStore'
+import FilterIndicator from '@/components/Map/Controls/FilterIndicator.vue'
 
 export default {
   name: "MapLayer",
@@ -53,7 +58,8 @@ export default {
     ...mapState(useSavedPlacesStore, ['savedPlaces']),
     ...mapState(useComponentCommunicator, ['mapPanOrder', 'markedPlaceInfo']),
     ...mapState(useSearchResultStore, ['currentKeyword']),
-    ...mapState(usePlaceDetailWindowStateStore, ['inspectedPlace', 'infoWindowOpen'])
+    ...mapState(usePlaceDetailWindowStateStore, ['inspectedPlace', 'infoWindowOpen']),
+    ...mapState(useCategoriesStore, ['categoriesInFilter'])
   },
   watch: {
     mapPanOrder: {
@@ -119,7 +125,8 @@ export default {
     SearchResultsLayer,
     PrimaryCoordinates,
     PositionMarker,
-    CenterToMe
+    CenterToMe,
+    FilterIndicator
   }
 }
 </script>

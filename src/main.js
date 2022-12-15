@@ -9,7 +9,7 @@ import { Plugin } from "vue-fragment";
 import VueCompositionAPI from "@vue/composition-api";
 import "./registerServiceWorker";
 import FirebaseVuePlugin from "@/plugins/firebase";
-import { LMap, LTileLayer, LMarker, LLayerGroup } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LLayerGroup, LControl } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 
@@ -30,6 +30,7 @@ Vue.component("l-map", LMap);
 Vue.component("l-tile-layer", LTileLayer);
 Vue.component("l-layer-group", LLayerGroup);
 Vue.component("l-marker", LMarker);
+Vue.component("l-control", LControl);
 
 Vue.config.productionTip = false;
 
