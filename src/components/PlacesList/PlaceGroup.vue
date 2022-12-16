@@ -19,9 +19,14 @@
 <script>
 import { useCategoriesStore } from '@/store/categoriesStore';
 import PlaceItem from './PlaceItem.vue';
-import { mapState } from 'pinia';
+import {
+  computed,
+  defineComponent,
+  ref,
+  watch
+} from 'vue';
 
-export default {
+export default defineComponent({
   name: "PlaceGroup",
   props: {
     category: {
@@ -29,28 +34,34 @@ export default {
       type: Object
     }
   },
-  computed: {
-    ...mapState(useCategoriesStore, ['categories']),
-    myCategory () {
-      return this.categories.find(v => this.category.name === v.category) ?? null
-    },
-    myColor () {
-      return this.myCategory?.color
-    }
-  },
-  data () {
-    return ({
-      open: false
-    })
-  },
-  watch: {
-    open () {
-      this.$emit('change:open', {
-        open: this.$data.open,
-        category: this.myCategory
+  setup (props, { emit }) {
+    const categoriesStore = useCategoriesStore()
+    const myCategory = computed(() => categoriesStore.categories.find(v => props.category.name === v.category) ?? null)
+    const myColor = computed(() => myCategory.value?.color)
+
+    const open = ref(false)
+
+    watch(open, () => {
+      emit('change:open', {
+        open: open.value,
+        category: myCategory.value
       })
+    })
+
+    categoriesStore.$subscribe((mutation, state) => {
+      if (!state.categoriesInFilter.length) {
+        open.value = false
+      }
+    })
+
+    return {
+      myCategory,
+      myColor,
+      open
     }
   },
-  components: { PlaceItem }
-}
+  components: {
+    PlaceItem
+  }
+})
 </script>
