@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <v-overlay v-model="isFetchingAuth">
-      <v-progress-circular indeterminate color="primary" />
-    </v-overlay>
+    <SplashScreen :value="isFetchingAuth" />
     <router-view v-if="!isFetchingAuth" />
   </v-app>
 </template>
@@ -11,6 +9,7 @@
 import { onAuthStateChanged } from "firebase/auth"
 import { useAuthStore } from "@/store/authStore"
 import { mapActions, mapState } from "pinia"
+import SplashScreen from "@/components/app/SplashScreen.vue"
 
 export default {
   computed: {
@@ -30,6 +29,9 @@ export default {
         this.clearAuthData()
       }
     })
+  },
+  components: {
+    SplashScreen
   }
 }
 </script>
