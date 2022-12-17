@@ -9,7 +9,7 @@
     :close-on-content-click="false"
     max-height="20vh"
   >
-    <template #activator>
+    <template #activator="{ on }">
       <v-text-field
         v-model="value"
         label="Search"
@@ -20,6 +20,7 @@
         dense
         outlined
         :hide-details="true"
+        v-on="on"
       >
         <template #append>
           <v-icon>mdi-magnify</v-icon>

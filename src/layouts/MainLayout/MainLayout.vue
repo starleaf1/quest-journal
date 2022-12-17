@@ -4,13 +4,10 @@
       app
       color="primary"
       dark
-      class="align-center justify-center"
+      class="align-center justify-space-between"
     >
       <v-app-bar-nav-icon @click="handleNavButtonClick"></v-app-bar-nav-icon>
-      <v-app-bar-title>AmborJo Quest</v-app-bar-title>
-      <v-spacer />
       <SearchBox />
-      <v-spacer />
       <ProfileMenu />
     </v-app-bar>
     <router-view />

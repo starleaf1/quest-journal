@@ -1,23 +1,25 @@
 <template>
-  <v-menu bottom v-model="open">
-    <template #activator="{ on }">
-      <v-btn icon v-on="on">
-        <v-avatar color="accent">
-          <span class="text-h5 font-weight-light">{{initials}}</span>
-        </v-avatar>
-      </v-btn>
-    </template>
-    <v-list dense>
-      <v-list-item @click="onLogoutClick">
-        <v-list-item-icon>
-          <v-icon>mdi-logout</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Logout</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-  </v-menu>
+  <div class="ml-3">
+    <v-menu bottom v-model="open">
+      <template #activator="{ on }">
+        <v-btn icon v-on="on">
+          <v-avatar color="accent">
+            <span class="text-h5 font-weight-light">{{initials}}</span>
+          </v-avatar>
+        </v-btn>
+      </template>
+      <v-list dense>
+        <v-list-item @click="onLogoutClick">
+          <v-list-item-icon>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </div>
 </template>
 
 <script>
