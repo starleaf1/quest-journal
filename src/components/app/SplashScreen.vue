@@ -7,7 +7,7 @@
       color="white"
     >
       <div class="pb-10">
-        <v-img src="../../../public/img/icons/app-logo.png" height="60vw" contain />
+        <v-img src="../../../public/img/icons/app-logo.png" height="60vw" max-height="225px" contain />
       </div>
       <div class="wrapper">
         <v-progress-linear indeterminate color="primary" />
