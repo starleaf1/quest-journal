@@ -1,14 +1,22 @@
 <template>
   <div>
+    <Carousel
+      v-model="isCarouselOpen"
+      :active="activePhoto"
+      :images="allImages"
+      @change:active="handleCarouselChange"
+      @cancel="isCarouselOpen = false"
+    />
     <v-slide-group
       v-model="activePhoto"
       class="mb-4"
+      center-active
+      @change="handleCarouselChange"
     >
       <v-slide-item
         v-for="(image, n) in allImages"
         :key="n"
         v-slot="{ active, toggle }"
-        @click="toggle"
         class="mx-2"
       >
         <PhotoImage
@@ -54,6 +62,7 @@ import { usePlaceDetailWindowStateStore } from '@/store/placeDetailWindowStateSt
 import { collection, onSnapshot, query } from '@firebase/firestore'
 import { db, storage } from '@/plugins/firebase'
 import { getDownloadURL, ref as firebaseStorageRef } from '@firebase/storage'
+import Carousel from './Carousel'
 
 export default defineComponent({
   name: 'PhotoGallery',
@@ -65,13 +74,16 @@ export default defineComponent({
   },
   components: {
     PhotoImage,
-    PhotoUploader
+    PhotoUploader,
+    Carousel
   },
   setup(props) {
     const authStore = useAuthStore()
     const placeDetailsWindowStateStore = usePlaceDetailWindowStateStore()
 
     const activePhoto = ref(0)
+    const isCarouselOpen = ref(false)
+
     const isUploaderDialogOpen = ref(false)
     const uploadedPhotos = ref([])
 
@@ -98,11 +110,18 @@ export default defineComponent({
       onCancel(() => { unsubscribe() })
     })
 
+    const handleCarouselChange = v => {
+      activePhoto.value = v
+      isCarouselOpen.value = true
+    }
+
     return {
       allImages,
       activePhoto,
       isUploaderDialogOpen,
-      storageDirectory
+      isCarouselOpen,
+      storageDirectory,
+      handleCarouselChange
     }
   }
 })
