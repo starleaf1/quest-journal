@@ -115,7 +115,7 @@ export default defineComponent({
       isCarouselOpen.value = true
     }
 
-    watch(activePhoto, (v) => { console.log('[carousel] Change to', v); handleCarouselChange(v) })
+    watch(activePhoto, handleCarouselChange)
 
     return {
       allImages,
