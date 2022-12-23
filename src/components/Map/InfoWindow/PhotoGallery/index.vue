@@ -11,7 +11,7 @@
       v-model="activePhoto"
       class="mb-4"
       center-active
-      @change="handleCarouselChange"
+      mandatory
     >
       <v-slide-item
         v-for="(image, n) in allImages"
@@ -54,7 +54,7 @@
 
 <script>
 import { defineComponent } from '@vue/composition-api'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import PhotoImage from "./PhotoImage.vue"
 import PhotoUploader from "@/components/common/PhotoUploader"
 import { useAuthStore } from '@/store/authStore'
@@ -114,6 +114,8 @@ export default defineComponent({
       activePhoto.value = v
       isCarouselOpen.value = true
     }
+
+    watch(activePhoto, (v) => { console.log('[carousel] Change to', v); handleCarouselChange(v) })
 
     return {
       allImages,
