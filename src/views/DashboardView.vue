@@ -13,15 +13,24 @@
 <script>
 import MapLayer from '@/components/Map/MapLayer.vue';
 import { useMiscStore } from '@/store';
-import { mapState } from "pinia"
 import PlacesList from '@/components/PlacesList/index.vue';
-// @ is an alias to /src
+import { computed, defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: "DashboardView",
-  computed: {
-    ...mapState(useMiscStore, ['drawerOpen'])
+  setup () {
+    const miscStore = useMiscStore()
+    
+    const drawerOpen = computed({
+      get: () => (miscStore.drawerOpen),
+      set: v => {
+        miscStore.drawerOpen = v 
+      }
+    })
+
+    return drawerOpen
   },
   components: { MapLayer, PlacesList }
-}
+})
+
 </script>
