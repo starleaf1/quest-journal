@@ -205,7 +205,6 @@ export default {
     ...mapActions(useSavePlaceDialogStore, ['openSaveDialog', 'closeSaveDialog']),
 
     populateInputs () {
-      console.log('[info-window] Triggering population input...', this.$data.socialMedia)
       this.$data.noteValue = this.placeData?.notes ?? ''
       this.$data.tagsValue = this.placeData?.tags ?? []
       this.$data.socialMedia = this.placeData?.socialMedia ?? []
