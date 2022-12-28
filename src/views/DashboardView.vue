@@ -28,7 +28,7 @@ export default defineComponent({
       }
     })
 
-    return { drawerOpen }
+    return drawerOpen
   },
   components: { MapLayer, PlacesList }
 })
