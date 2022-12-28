@@ -1,12 +1,16 @@
 import { initializeApp } from "firebase/app";
-import { connectFirestoreEmulator, enableIndexedDbPersistence, getFirestore } from "firebase/firestore";
+import {
+  connectFirestoreEmulator,
+  enableIndexedDbPersistence,
+  getFirestore,
+} from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
-  authDomain: "quest-journal-14942.firebaseapp.com",
+  authDomain: "quest.amborjo.com",
   projectId: "quest-journal-14942",
   storageBucket: "quest-journal-14942.appspot.com",
   messagingSenderId: "101975172369",
@@ -27,8 +31,14 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 }
 
 enableIndexedDbPersistence(db)
-  .then(() => { console.debug('[db-persistence] Database persistence is enabled on this device.') })
-  .catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
+  .then(() => {
+    console.debug(
+      "[db-persistence] Database persistence is enabled on this device."
+    );
+  })
+  .catch((e) => {
+    console.warn("[db-persistence] Cannot enable persistence", e);
+  });
 
 export { app, db, functions, auth, storage };
 export default {
