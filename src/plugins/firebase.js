@@ -10,7 +10,7 @@ import { connectStorageEmulator, getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
-  authDomain: "quest.amborjo.com",
+  authDomain: "quest-journal-14942.firebaseapp.com",
   projectId: "quest-journal-14942",
   storageBucket: "quest-journal-14942.appspot.com",
   messagingSenderId: "101975172369",
