@@ -35,3 +35,17 @@ export const useTagsStore = defineStore("tagsStore", () => {
 
   return { tags, unsubscribe, append, remove, edit };
 });
+
+export const useTagFilterStore = defineStore("tagFilterStore", () => {
+  const tagFilters = ref([]);
+
+  const add = (newTag) => {
+    tagFilters.value.push(newTag);
+  };
+  const remove = (target) => {
+    const targetIndex = tagFilters.value.findIndex((tag) => tag === target);
+    tagFilters.value.splice(targetIndex, 1);
+  };
+
+  return { tagFilters, add, remove };
+});
