@@ -127,6 +127,10 @@ export default defineComponent({
       {
         title: "TripAdvisor",
         remarks: ["no_name"]
+      },
+      {
+        title: "Traveloka",
+        remarks: ["no_name"]
       }
     ])
 
