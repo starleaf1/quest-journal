@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { connectFirestoreEmulator, enableIndexedDbPersistence, getFirestore } from "firebase/firestore";
+import {
+  connectFirestoreEmulator,
+  enableIndexedDbPersistence,
+  getFirestore,
+} from "firebase/firestore";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
@@ -27,8 +31,14 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
 }
 
 enableIndexedDbPersistence(db)
-  .then(() => { console.debug('[db-persistence] Database persistence is enabled on this device.') })
-  .catch(e => { console.warn('[db-persistence] Cannot enable persistence', e) })
+  .then(() => {
+    console.debug(
+      "[db-persistence] Database persistence is enabled on this device."
+    );
+  })
+  .catch((e) => {
+    console.warn("[db-persistence] Cannot enable persistence", e);
+  });
 
 export { app, db, functions, auth, storage };
 export default {
