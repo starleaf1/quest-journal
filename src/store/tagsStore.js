@@ -25,7 +25,6 @@ export const useTagsStore = defineStore("tagsStore", () => {
     await addDoc(colRef, { name });
   }
   async function edit(id, name) {
-    console.log("[edit-tag]", { id, name });
     const docRef = doc(colRef, id);
     await setDoc(docRef, { name }, { merge: true });
   }
