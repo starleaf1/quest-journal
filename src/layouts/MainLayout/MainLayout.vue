@@ -17,16 +17,18 @@
 <script>
 import ProfileMenu from "@/components/auth/ProfileMenu.vue";
 import { useMiscStore } from '@/store';
-import { mapActions } from 'pinia'
 import SearchBox from "@/components/SearchBox/index.vue";
-export default {
-  name: 'MainLayout',
-  components: {
-    ProfileMenu,
-    SearchBox
-},
-  methods: {
-    ...mapActions(useMiscStore, { handleNavButtonClick: 'toggleDrawer' })
-  }
-}
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: "MainLayout",
+  setup() {
+    const miscStore = useMiscStore()
+    const handleNavButtonClick = miscStore.toggleDrawer
+
+    return { handleNavButtonClick }
+  },
+  components: { ProfileMenu, SearchBox }
+})
 </script>
+
