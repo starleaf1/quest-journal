@@ -23,8 +23,7 @@ export default defineComponent({
 <template>
   <v-card>
     <v-card-title>Filter by tags</v-card-title>
-    <v-card-text></v-card-text>
-    <v-card-actions>
+    <v-card-text>
       <v-chip-group
         multiple
         column
@@ -37,6 +36,10 @@ export default defineComponent({
           {{ tag }}
         </v-chip>
       </v-chip-group>
+    </v-card-text>
+    <v-card-actions class="justify-space-between">
+      <v-btn color="primary" text>Reset</v-btn>
+      <v-btn color="primary" text>Apply</v-btn>
     </v-card-actions>
   </v-card>
 </template>
