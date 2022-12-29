@@ -38,10 +38,11 @@
       <v-text-field
         outlined
         dense
-        :label="hasUsername.includes(value.name) ? 'Username' : 'Label'"
+        :label="hasUsername ? 'Username' : 'Label'"
         placeholder="@john.smith"
         v-model="username"
         @input="handleInput"
+        :disabled="isNameFieldDisabled"
       />
     </div>
     <div
@@ -71,7 +72,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 
 export default defineComponent({
   props: {
@@ -88,23 +89,48 @@ export default defineComponent({
       },
       {
         icon: 'mdi-instagram',
-        title: 'Instagram'
+        title: 'Instagram',
+        remarks: ["has_username"]
       },
       {
         icon: 'mdi-facebook',
-        title: 'Facebook'
+        title: 'Facebook',
+        remarks: ["has_username"]
       },
       {
         icon: 'mdi-twitter',
-        title: 'Twitter'
+        title: 'Twitter',
+        remarks: ["has_username"]
       },
       {
         icon: 'mdi-whatsapp',
-        title: 'WhatsApp'
+        title: 'WhatsApp',
+        remarks: ["has_username"]
       },
       {
         icon: 'mdi-youtube',
-        title: 'YouTube'
+        title: 'YouTube',
+        remarks: ["has_username"]
+      },
+      {
+        title: "Agoda",
+        remarks: ["no_name"]
+      },
+      {
+        title: "Booking.com",
+        remarks: ["no_name"]
+      },
+      {
+        title: "Tiket.com",
+        remarks: ["no_name"]
+      },
+      {
+        title: "TripAdvisor",
+        remarks: ["no_name"]
+      },
+      {
+        title: "Traveloka",
+        remarks: ["no_name"]
       }
     ])
 
@@ -112,13 +138,9 @@ export default defineComponent({
     const url = ref(props.value?.url ?? '')
     const username = ref(props.value?.username ?? '')
 
-    const hasUsername = ref([
-      'Instagram',
-      'Facebook',
-      'Twitter',
-      'WhatsApp',
-      'YouTube'
-    ])
+    const hasUsername = computed(() => items.value.find(item => (item.remarks ?? []).includes("has_username")))
+
+    const isNameFieldDisabled = computed(() => items.value.find(item => (item.remarks ?? []).includes("no_name")))
 
     const handleInput = () => {
       let urlPath = ''
@@ -153,7 +175,8 @@ export default defineComponent({
       username,
       handleInput,
       emitDelete,
-      hasUsername
+      hasUsername,
+      isNameFieldDisabled
     }
   },
 })
