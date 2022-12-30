@@ -133,21 +133,21 @@
 </template>
 
 <script>
+import { computed, defineComponent, ref, watch } from 'vue'
 import { usePlaceDetailsStore } from '@/store/placeDetails'
-import { mapActions, mapState } from 'pinia';
 import { useSavedPlacesStore } from '@/store/savedPlaces';
 import { useCategoriesStore } from '@/store/categoriesStore';
+import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
 import OpeningHours from './OpeningHours.vue'
 import PhotoGallery from './PhotoGallery/index.vue';
 import SocialMediaLink from './SocialMedia/SocialMediaLink.vue'
 import InfoWindowMenu from './InfoWindowMenu.vue'
 import InfoWindowLoadingSkeleton from './InfoWindowLoadingSkeleton.vue'
 import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
-import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
 import ReviewStarsChip from './ReviewStarsChip.vue'
 import sanitizeHtml from 'sanitize-html'
 
-export default {
+export default defineComponent({
   name: "PlaceDetailsDialog",
   props: {
     open: {
@@ -157,72 +157,50 @@ export default {
       default: () => ({})
     }
   },
-  computed: {
-    ...mapState(useSavedPlacesStore, ['savedPlaces']),
-    ...mapState(useCategoriesStore, ['categories']),
-    placeTags() {
-      return this.placeData.types?.map?.(type => {
-        const spaced = type.replace(/_/g, " ");
-        return `${spaced.charAt(0).toUpperCase()}${spaced.slice(1)}`;
-      });
-    },
-    placeData() {
-      return {
-        ...this.place,
-        ...this.$data.placeDetails,
-        ...this.extraSavedData
-      };
-    },
-    extraSavedData () {
-      return this.savedPlaces.find(place => place?.place_id === this.place?.place_id)
-    },
-    isPlaceSaved () {
-      return !!this.extraSavedData
-    },
-    sanitizedNotes () {
+  setup(props, { emit }) {
+    const savedPlacesStore = useSavedPlacesStore()
+    const categoriesStore = useCategoriesStore()
+    const placeDetailsStore = usePlaceDetailsStore()
+    const savePlaceDialogStore = useSavePlaceDialogStore()
+
+    const { append, remove } = placeDetailsStore
+    const { openSaveDialog } = savePlaceDialogStore
+
+    const savedDialogOpen = ref(false)
+    const placeDetails = ref({})
+    const isLoading = ref(false)
+    const isSubmitting = ref(false)
+    const noteValue = ref("")
+    const tagsValue = ref([])
+    const categoryValue = ref(null)
+    const socialMedia = ref([])
+
+    const savedPlaces = computed(() => savedPlacesStore.savedPlaces)
+    const categories = computed(() => categoriesStore.categories)
+    const extraSavedData = computed(() => (
+      savedPlaces.value.find(place => place?.place_id === this.place?.place_id)
+    ))
+    const placeData = computed(() => ({
+      ...props.place,
+      ...placeDetails.value,
+      ...extraSavedData.value
+    }))
+    const isPlaceSaved = computed(() => !!extraSavedData.value)
+    const sanitizedNotes = computed(() => {
       const lineBroke = this.placeData?.notes.replace(/(?:\r\n|\r|\n)/g, '<br />')
       if (!lineBroke) return null
       return sanitizeHtml(lineBroke, {
         allowedTags: ['br', 'p']
       })
+    })
+
+    const handleCloseDialog = () => {
+      emit("click:close")
     }
-  },
-  data() {
-    return ({
-      saveDialogOpen: false,
-      placeDetails: {},
-      loading: false,
-      isSubmitting: false,
-      noteValue: '',
-      tagsValue: [],
-      categoryValue: null,
-      socialMedia: []
-    });
-  },
-  methods: {
-    ...mapActions(usePlaceDetailsStore, ['getDetailsById']),
-    ...mapActions(useSavedPlacesStore, ['append', 'remove']),
-    ...mapActions(useSavePlaceDialogStore, ['openSaveDialog', 'closeSaveDialog']),
-
-    populateInputs () {
-      console.log('[info-window] Triggering population input...', this.$data.socialMedia)
-      this.$data.noteValue = this.placeData?.notes ?? ''
-      this.$data.tagsValue = this.placeData?.tags ?? []
-      this.$data.socialMedia = this.placeData?.socialMedia ?? []
-      this.$data.categoryValue = this.categories.find(
-        category => (
-          this.placeData?.category === category.category
-        )
-      )
-    },
-
-    handleCloseDialog() {
-      this.$emit("click:outside");
-    },
-    async getPlaceDetails(placeId) {
+    const getPlaceDetails = async (placeId) => {
       try {
-        this.$data.loading = true;
-        this.$data.placeDetails = await this.getDetailsById(placeId);
+        isLoading.value = true;
+        placeDetails.value = await placeDetailsStore.getDetailsById(placeId);
       }
       catch (e) {
         console.error(e);
@@ -230,38 +208,66 @@ export default {
       finally {
         this.$data.loading = false;
       }
-    },
-    async savePlace () {
+    }
+
+    const populateInputs = () => {
+      console.log('[info-window] Triggering population input...', this.$data.socialMedia)
+      noteValue.value = placeData.value?.notes ?? ''
+      tagsValue.value = placeData.value?.tags ?? []
+      socialMedia.value = placeData.value?.socialMedia ?? []
+      categoryValue.value = categories.value.find(
+        category => (
+          placeData.value?.category === category.category
+        )
+      )
+    }
+
+    const savePlace = async () => {
       try {
-        this.$data.isSubmitting = true
-        await this.append({
-          ...this.placeData,
-          notes: this.$data.noteValue,
-          tags: this.$data.tagsValue,
-          category: this.$data.categoryValue,
-          socialMedia: this.$data.socialMedia
+        isSubmitting.value = true
+        await append({
+          ...placeData.value,
+          notes: noteValue.value,
+          tags: tagsValue.value,
+          category: categoryValue.value,
+          socialMedia: socialMedia.value
         })
-        this.openSaveDialog(this.place?.place_id)
+        openSaveDialog(this.place?.place_id)
       } catch (e) {
         console.error('[info-window]', e)
       } finally {
-        this.$data.isSubmitting = false
+        isSubmitting.value = false
       }
-    },
-    async handleDeleteButtonClick () {
+    }
+
+    const handleDeleteButtonClick = async () => {
       try {
-        await this.remove(this.placeData.place_id)
+        await remove(placeData.value.place_id)
       } catch (e) {
         console.error('[delete-button-click]', e)
       }
     }
-  },
-  watch: {
-    place(v) {
-      this.getPlaceDetails(v?.place_id);
-    },
-    placeData () {
-      this.populateInputs()
+
+    watch(props.place, (v) => {
+      getPlaceDetails(v?.place_id);
+    })
+    watch(placeData, () => {
+      populateInputs()
+    })
+
+    return {
+      isSubmitting,
+      noteValue,
+      loading: isLoading,
+      isPlaceSaved,
+      savedPlaces,
+      categories,
+      placeData,
+      sanitizedNotes,
+      handleCloseDialog,
+      savePlace,
+      savedDialogOpen,
+      handleDeleteButtonClick
     }
   },
   components: {
@@ -273,5 +279,5 @@ export default {
     InfoInputBottomSheet,
     ReviewStarsChip,
   }
-}
+})
 </script>
