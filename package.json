@@ -12,6 +12,7 @@
     "@mdi/js": "^7.0.96",
     "@vue/composition-api": "^1.7.0",
     "core-js": "^3.8.3",
+    "dayjs": "^1.11.7",
     "firebase": "^9.9.2",
     "geopoint": "^1.0.1",
     "leaflet": "^1.8.0",
