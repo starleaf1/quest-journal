@@ -86,6 +86,10 @@
       <v-card-subtitle v-if="isPlaceSaved">
         <v-icon x-small left :color="categoryValue?.color ?? 'black'">mdi-circle</v-icon>
         <span>{{ categoryValue?.category ?? 'Uncategorized' }}</span>
+        <span>
+          &middot;
+          Last updated {{ displayUpdatedAt }}
+        </span>
       </v-card-subtitle>
       <InfoWindowLoadingSkeleton v-if="loading" />
       <v-card-text v-else>
@@ -146,6 +150,7 @@ import InfoInputBottomSheet from './InfoInput/InfoInputBottomSheet.vue'
 import { useSavePlaceDialogStore } from '@/store/savePlaceDialogStore'
 import ReviewStarsChip from './ReviewStarsChip.vue'
 import sanitizeHtml from 'sanitize-html'
+import dayjs from 'dayjs';
 
 export default {
   name: "PlaceDetailsDialog",
@@ -185,6 +190,13 @@ export default {
       return sanitizeHtml(lineBroke, {
         allowedTags: ['br', 'p']
       })
+    },
+    displayUpdatedAt () {
+      return (
+        this.placeData?.updatedAt ?
+        dayjs(this.placeData?.updatedAt?.toDate()).format('DD/MM/YYYY')
+        : "long time ago"
+      )
     }
   },
   data() {
@@ -239,7 +251,8 @@ export default {
           notes: this.$data.noteValue,
           tags: this.$data.tagsValue,
           category: this.$data.categoryValue,
-          socialMedia: this.$data.socialMedia
+          socialMedia: this.$data.socialMedia,
+          updatedAt: new Date()
         })
         this.openSaveDialog(this.place?.place_id)
       } catch (e) {

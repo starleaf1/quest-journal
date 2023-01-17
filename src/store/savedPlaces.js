@@ -48,7 +48,8 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
     notes,
     formatted_address,
     category,
-    socialMedia
+    socialMedia,
+    updatedAt
   }) {
     const toBeSaved = {
       place_id,
@@ -56,6 +57,7 @@ export const useSavedPlacesStore = defineStore("savedPlacesStore", () => {
       name,
       ...(types?.length ? { types } : []),
       tags,
+      updatedAt,
       notes,
       geometry: {
         location: new GeoPoint(
